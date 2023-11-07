@@ -136,7 +136,7 @@ export const openGroupApi = async (groupName) => {
 };
 
 const deleteGroupIdFromUsers = async ({ userId, groupId }) => {
-  const user = await getUserByIdApi(userId);
+  // const user = await getUserByIdApi(userId);
   console.log("userId", userId);
   const userDocRef = doc(db, "users", userId); // Replace 'groups' with your actual collection name
 
@@ -222,11 +222,12 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
 };
 export const addExpenseToGroupApi = async ({
   groupId,
-  userId,
   expenseName,
   expenseAmount,
 }) => {
   try {
+    const uid = auth.currentUser.uid;
+
     const groupRef = doc(db, "groups", groupId); // Replace 'groups' with your actual collection name
     const docSnap = await getDoc(groupRef);
 
@@ -236,21 +237,16 @@ export const addExpenseToGroupApi = async ({
 
     const group = await docSnap.data();
     console.log("docSnap", group);
-    const newExpenses = Array.from(
-      new Set([
-        ...group.expenses,
-        {
-          user_id: userId,
-          amount: expenseAmount,
-          name: expenseName,
-        },
-      ])
-    );
+    const newExpense = {
+      user_id: uid,
+      amount: expenseAmount,
+      name: expenseName,
+    };
     await setDoc(
       groupRef,
       {
         ...group,
-        expenses: newExpenses,
+        expenses: [...group.expenses, newExpense],
       },
       { merge: true }
     );

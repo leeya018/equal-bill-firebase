@@ -47,8 +47,7 @@ export default function index() {
   };
   const addExpenseToGroup = () => {
     addExpenseToGroupApi({
-      userId: "EFTQ9RcLOceRHHuoVVcy7gywKTn1",
-      groupId: "9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group",
+      groupId: "s9orxr9KzKDCMXZYzl3z",
       expenseName: "Arnona",
       expenseAmount: 220,
     });
