@@ -9,6 +9,7 @@ import {
   loginApi,
   openGroupApi,
   signupApi,
+  updateGroupNameApi,
 } from "api";
 import React, { useEffect } from "react";
 
@@ -57,6 +58,13 @@ export default function index() {
   };
   const findGroupById = () => {
     findGroupByIdApi("9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group");
+  };
+  const updateGroupName = () => {
+    updateGroupNameApi({
+      userId: "9fo2IXkfiyOzhr7QyOPU48nYjfJ2",
+      groupId: "9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group",
+      groupName: "name",
+    });
   };
   return (
     <div
@@ -112,6 +120,12 @@ export default function index() {
           className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
         >
           findGroupById
+        </button>
+        <button
+          onClick={updateGroupName}
+          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+        >
+          updateGroupNameApi
         </button>
       </div>
     </div>

@@ -243,12 +243,32 @@ export const addExpenseToGroupApi = async ({
   }
 };
 
-export const getAllUsers = async () => {
-  const querySnapshot = await getDocs(collection(db, "users"));
-  const usersDocs = querySnapshot.docs.map((doc) => doc.data());
-  return usersDocs;
-};
+export const updateGroupNameApi = async ({ groupId, userId, groupName }) => {
+  try {
+    const groupRef = doc(db, "groups", groupId); // Replace 'groups' with your actual collection name
+    const docSnap = await getDoc(groupRef);
 
+    if (!docSnap.exists()) {
+      throw new Error("Group " + groupId + " does not exist");
+    }
+
+    const group = await docSnap.data();
+    console.log("docSnap", group);
+
+    await setDoc(
+      groupRef,
+      {
+        ...group,
+        name: groupName,
+        id: userId + "-" + groupName,
+      },
+      { merge: true }
+    );
+    console.log("group name has been updated");
+  } catch (error) {
+    throw error.message;
+  }
+};
 const getString = (dataArr) => {
   return dataArr.join(",");
 };
