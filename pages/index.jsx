@@ -34,10 +34,10 @@ export default function index() {
   };
 
   const openGroup = () => {
-    openGroupApi("nwe one 1");
+    openGroupApi("nwe one 5");
   };
   const closeGroup = () => {
-    closeGroupApi("9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group1");
+    closeGroupApi("Go8TZTFU95ng1IsA4tNr");
   };
   const addUserToGroup = () => {
     addUserToGroupApi({

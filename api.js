@@ -11,6 +11,7 @@ import {
   where,
   deleteDoc,
   addDoc,
+  arrayRemove,
 } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import {
@@ -25,7 +26,7 @@ const addUser = async (user) => {
   await setDoc(
     userRef,
     {
-      user,
+      ...user,
     },
     { merge: true }
   );
@@ -141,16 +142,40 @@ export const openGroupApi = async (groupName) => {
   }
 };
 
+const deleteGroupIdFromUsers = async ({ userId, groupId }) => {
+  const user = await getUserByIdApi(userId);
+  console.log("userId", userId);
+  const userDocRef = doc(db, "users", userId); // Replace 'groups' with your actual collection name
+
+  await updateDoc(userDocRef, {
+    groups_ids: arrayRemove(groupId),
+  });
+};
+
 export const closeGroupApi = async (groupId) => {
-  const groupRef = doc(db, "groups", groupId); // Replace 'groups' with your actual collection name
+  const uid = auth.currentUser.uid;
 
   try {
+    const groupRef = doc(db, "groups", groupId); // Replace 'groups' with your actual collection name
     const docSnap = await getDoc(groupRef);
 
     if (!docSnap.exists()) {
       throw new Error("Group " + groupId + " does not exist");
     }
+    const foundGroup = await docSnap.data();
+    if (foundGroup.admin_id !== uid) {
+      throw new Error("You don't have permission to delete this group");
+    }
+    const usersIds = foundGroup.users_ids;
+    // delete groupId from all users
+    const promises = usersIds.map((userId) =>
+      deleteGroupIdFromUsers({ groupId, userId })
+    );
+    await Promise.all(promises);
+    // delete group
+
     await deleteDoc(groupRef);
+
     console.log(`Document with ID ${groupId} successfully deleted!`);
   } catch (error) {
     console.error("Error removing document: ", error);
