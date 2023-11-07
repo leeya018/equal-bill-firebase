@@ -10,6 +10,7 @@ import {
   query,
   where,
   deleteDoc,
+  addDoc,
 } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import {
@@ -39,7 +40,7 @@ export const signupApi = (user) => {
       console.log("user", user);
       const uid = user.uid;
       console.log(uid);
-      const newUser = { email, name, id: uid, phone, groups_ids: [] };
+      const newUser = { email, name, phone, groups_ids: [] };
       console.log("newUser", newUser);
       addUser(newUser);
       // ...
@@ -94,38 +95,38 @@ export const findGroupByIdApi = async (groupId) => {
     throw err.message;
   }
 };
-export const openGroupApi = async ({ userId, groupName }) => {
+export const openGroupApi = async (groupName) => {
   try {
-    const groupId = userId + "_" + groupName;
-    const group = await findGroupByIdApi(groupId);
-    if (group !== null) {
-      throw new Error("group name: " + groupName + " is already exists");
-    }
-    const groupRef = doc(db, "groups", userId + "_" + groupName);
-    if (!groupRef) return;
-    await setDoc(
+    console.log("uid", auth.currentUser.uid);
+    const uid = auth.currentUser.uid;
+    const groupRef = collection(db, "groups"); // Replace 'groups' with your actual collection name
+    const q = query(
       groupRef,
-      {
-        id: userId + "_" + groupName,
-        admin_id: userId,
-        name: groupName,
-        expenses: [],
-        users_ids: [],
-      },
-      { merge: true }
+      where("name", "==", groupName),
+      where("admin_id", "==", uid)
     );
-    const userRef = doc(db, "users", userId); // Replace 'groups' with your actual collection name
-    const docUserSnap = await getDoc(userRef);
 
+    const docSnap = await getDocs(q);
+    if (!docSnap.empty) {
+      throw new Error("Group " + groupName + " already not exist");
+    }
+    if (!groupRef) return;
+    const groupDocRef = await addDoc(groupRef, {
+      admin_id: uid,
+      name: groupName,
+      expenses: [],
+      users_ids: [uid],
+    });
+    const userRef = doc(db, "users", uid); // Replace 'groups' with your actual collection name
+    const docUserSnap = await getDoc(userRef);
     if (!docUserSnap.exists()) {
-      throw new Error("User " + userId + " does not exist");
+      throw new Error("User " + uid + " does not exist");
     }
     const user = await docUserSnap.data();
     console.log("user", user);
     const newGroupsIds = Array.from(
-      new Set([...user.user.groups_ids, groupId])
+      new Set([...user.user.groups_ids, groupDocRef.id])
     );
-
     await setDoc(
       userRef,
       {

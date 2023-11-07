@@ -34,10 +34,7 @@ export default function index() {
   };
 
   const openGroup = () => {
-    openGroupApi({
-      userId: "9fo2IXkfiyOzhr7QyOPU48nYjfJ2",
-      groupName: "best group1",
-    });
+    openGroupApi("nwe one 1");
   };
   const closeGroup = () => {
     closeGroupApi("9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group1");
