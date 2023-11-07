@@ -57,9 +57,8 @@ export default function index() {
   };
   const updateGroupName = () => {
     updateGroupNameApi({
-      userId: "9fo2IXkfiyOzhr7QyOPU48nYjfJ2",
-      groupId: "9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group",
-      groupName: "name",
+      groupId: "s9orxr9KzKDCMXZYzl3z",
+      groupName: "new sex",
     });
   };
   return (

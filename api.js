@@ -250,6 +250,7 @@ export const addExpenseToGroupApi = async ({
       },
       { merge: true }
     );
+
     console.log(
       "Expense " + expenseName + "added successfully to Group " + groupId
     );
@@ -258,8 +259,10 @@ export const addExpenseToGroupApi = async ({
   }
 };
 
-export const updateGroupNameApi = async ({ groupId, userId, groupName }) => {
+export const updateGroupNameApi = async ({ groupId, groupName }) => {
   try {
+    const uid = auth.currentUser.uid;
+
     const groupRef = doc(db, "groups", groupId); // Replace 'groups' with your actual collection name
     const docSnap = await getDoc(groupRef);
 
@@ -270,15 +273,10 @@ export const updateGroupNameApi = async ({ groupId, userId, groupName }) => {
     const group = await docSnap.data();
     console.log("docSnap", group);
 
-    await setDoc(
-      groupRef,
-      {
-        ...group,
-        name: groupName,
-        id: userId + "-" + groupName,
-      },
-      { merge: true }
-    );
+    await updateDoc(groupRef, {
+      ...group,
+      name: groupName,
+    });
     console.log("group name has been updated");
   } catch (error) {
     throw error.message;
