@@ -125,17 +125,10 @@ export const openGroupApi = async (groupName) => {
     }
     const user = await docUserSnap.data();
     console.log("user", user);
-    const newGroupsIds = Array.from(
-      new Set([...user.user.groups_ids, groupDocRef.id])
-    );
-    await setDoc(
-      userRef,
-      {
-        ...user,
-        groups_ids: newGroupsIds,
-      },
-      { merge: true }
-    );
+
+    await updateDoc(userRef, {
+      groups_ids: arrayUnion(groupDocRef.id),
+    });
     console.log("group created: " + groupName);
   } catch (error) {
     throw error.message;
@@ -183,6 +176,8 @@ export const closeGroupApi = async (groupId) => {
 };
 
 export const addUserToGroupApi = async ({ groupId, userId }) => {
+  const uid = auth.currentUser.uid;
+
   try {
     const groupRef = doc(db, "groups", groupId); // Replace 'groups' with your actual collection name
     const docSnap = await getDoc(groupRef);
@@ -192,6 +187,12 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
     }
 
     const group = await docSnap.data();
+    console.log("group", group);
+    console.log("uid", uid);
+    console.log("admin_id", group.admin_id);
+    if (group.admin_id !== uid) {
+      throw new Error("You don't have permission to add to this group");
+    }
     console.log("docSnap", group);
     const newUserIds = Array.from(new Set([...group.users_ids, userId]));
     await setDoc(
@@ -210,18 +211,10 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
     }
     const user = await docUserSnap.data();
     console.log("user", user);
-    const newGroupsIds = Array.from(
-      new Set([...user.user.groups_ids, groupId])
-    );
 
-    await setDoc(
-      userRef,
-      {
-        ...user,
-        groups_ids: newGroupsIds,
-      },
-      { merge: true }
-    );
+    await updateDoc(userRef, {
+      groups_ids: arrayUnion(groupId),
+    });
     console.log("User " + userId + "added successfully to Group " + groupId);
   } catch (error) {
     throw error.message;

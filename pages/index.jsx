@@ -34,15 +34,15 @@ export default function index() {
   };
 
   const openGroup = () => {
-    openGroupApi("nwe one 5");
+    openGroupApi("nwe one 7 ");
   };
   const closeGroup = () => {
-    closeGroupApi("Go8TZTFU95ng1IsA4tNr");
+    closeGroupApi("s9orxr9KzKDCMXZYzl3z");
   };
   const addUserToGroup = () => {
     addUserToGroupApi({
       userId: "EFTQ9RcLOceRHHuoVVcy7gywKTn1",
-      groupId: "9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group",
+      groupId: "s9orxr9KzKDCMXZYzl3z",
     });
   };
   const addExpenseToGroup = () => {
