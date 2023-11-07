@@ -96,7 +96,7 @@ export const findGroupByIdApi = async (groupId) => {
     throw err.message;
   }
 };
-export const openGroupApi = async (groupName) => {
+export const createGroupApi = async (groupName) => {
   try {
     console.log("uid", auth.currentUser.uid);
     const uid = auth.currentUser.uid;
@@ -145,7 +145,7 @@ const deleteGroupIdFromUsers = async ({ userId, groupId }) => {
   });
 };
 
-export const closeGroupApi = async (groupId) => {
+export const deleteGroupApi = async (groupId) => {
   const uid = auth.currentUser.uid;
 
   try {

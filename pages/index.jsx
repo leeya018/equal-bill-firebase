@@ -2,12 +2,12 @@ import {
   addExpenseToGroupApi,
   addGroupApi,
   addUserToGroupApi,
-  closeGroupApi,
+  deleteGroupApi,
   findGroupByIdApi,
   getAllUsers,
   getUserByIdApi,
   loginApi,
-  openGroupApi,
+  createGroupApi,
   signupApi,
   updateGroupNameApi,
 } from "api";
@@ -33,11 +33,11 @@ export default function index() {
     getUserByIdApi("b0jXe1B40EXCtRBUV0dVUakkDdB2");
   };
 
-  const openGroup = () => {
-    openGroupApi("nwe one 7 ");
+  const createGroup = () => {
+    createGroupApi("nwe one 7 ");
   };
-  const closeGroup = () => {
-    closeGroupApi("s9orxr9KzKDCMXZYzl3z");
+  const deleteGroup = () => {
+    deleteGroupApi("s9orxr9KzKDCMXZYzl3z");
   };
   const addUserToGroup = () => {
     addUserToGroupApi({
@@ -87,16 +87,16 @@ export default function index() {
           getUserById
         </button>
         <button
-          onClick={openGroup}
+          onClick={createGroup}
           className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
         >
-          openGroup
+          createGroup
         </button>
         <button
-          onClick={closeGroup}
+          onClick={deleteGroup}
           className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
         >
-          closeGroup
+          deleteGroup
         </button>
         <button
           onClick={addUserToGroup}
