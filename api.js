@@ -19,9 +19,10 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { getResponse } from "./util";
 
-const addUser = async (user) => {
-  const userRef = doc(db, "users", user.id);
+const addUser = async (user, id) => {
+  const userRef = doc(db, "users", id);
   if (!userRef) return;
   await setDoc(
     userRef,
@@ -32,52 +33,53 @@ const addUser = async (user) => {
   );
 };
 
-export const signupApi = (user) => {
+export const signupApi = async (user) => {
   const { email, password, name, phone } = user;
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up
-      const user = userCredential.user;
-      console.log("user", user);
-      const uid = user.uid;
-      console.log(uid);
-      const newUser = { email, name, phone, groups_ids: [] };
-      console.log("newUser", newUser);
-      addUser(newUser);
-      // ...
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      throw getString(["signupApi", "error", errorCode, errorMessage]);
-    });
-};
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
+    const uid = userCredential.user.uid;
+
+    const newUser = { email, name, phone, groups_ids: [] };
+
+    await addUser(newUser, uid);
+
+    return getResponse("signup success").SUCCESS;
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR;
+  }
+};
 export const loginApi = async ({ email, password }) => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      console.log("logged in user", user);
-      return user;
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      throw getString(["login", "error", errorCode, errorMessage]);
-    });
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    return getResponse("user logged in successfully").SUCCESS;
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR;
+  }
 };
 
 export const getUserByIdApi = async (userId) => {
-  const docRef = doc(db, "users", userId);
-  const docSnap = await getDoc(docRef);
+  try {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-    return docSnap.data();
-  } else {
-    console.log("No such document!");
-    return null;
+    if (docSnap.exists()) {
+      return docSnap.data();
+    } else {
+      return getResponse("user is not found").NOT_FOUND;
+    }
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR;
   }
 };
 
@@ -88,17 +90,16 @@ export const findGroupByIdApi = async (groupId) => {
     const docSnap = await getDoc(groupRef);
 
     if (!docSnap.exists()) {
-      throw new Error("Group " + groupId + " does not exist");
+      return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
     }
-    console.log("group data: ", docSnap.data());
+
     return docSnap.data();
-  } catch (err) {
-    throw err.message;
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR;
   }
 };
 export const createGroupApi = async (groupName) => {
   try {
-    console.log("uid", auth.currentUser.uid);
     const uid = auth.currentUser.uid;
     const groupRef = collection(db, "groups"); // Replace 'groups' with your actual collection name
     const q = query(
@@ -109,9 +110,9 @@ export const createGroupApi = async (groupName) => {
 
     const docSnap = await getDocs(q);
     if (!docSnap.empty) {
-      throw new Error("Group " + groupName + " already not exist");
+      return getResponse("Group " + groupName + " does not exist").NOT_FOUND;
     }
-    if (!groupRef) return;
+
     const groupDocRef = await addDoc(groupRef, {
       admin_id: uid,
       name: groupName,
@@ -119,25 +120,17 @@ export const createGroupApi = async (groupName) => {
       users_ids: [uid],
     });
     const userRef = doc(db, "users", uid); // Replace 'groups' with your actual collection name
-    const docUserSnap = await getDoc(userRef);
-    if (!docUserSnap.exists()) {
-      throw new Error("User " + uid + " does not exist");
-    }
-    const user = await docUserSnap.data();
-    console.log("user", user);
 
     await updateDoc(userRef, {
       groups_ids: arrayUnion(groupDocRef.id),
     });
-    console.log("group created: " + groupName);
+    return getResponse("group created").SUCCESS;
   } catch (error) {
-    throw error.message;
+    return getResponse(error.message).GENERAL_ERROR;
   }
 };
 
 const deleteGroupIdFromUsers = async ({ userId, groupId }) => {
-  // const user = await getUserByIdApi(userId);
-  console.log("userId", userId);
   const userDocRef = doc(db, "users", userId); // Replace 'groups' with your actual collection name
 
   await updateDoc(userDocRef, {
@@ -153,11 +146,12 @@ export const deleteGroupApi = async (groupId) => {
     const docSnap = await getDoc(groupRef);
 
     if (!docSnap.exists()) {
-      throw new Error("Group " + groupId + " does not exist");
+      return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
     }
     const foundGroup = await docSnap.data();
     if (foundGroup.admin_id !== uid) {
-      throw new Error("You don't have permission to delete this group");
+      return getResponse("You don't have permission to delete this group")
+        .PERMISSION;
     }
     const usersIds = foundGroup.users_ids;
     // delete groupId from all users
@@ -169,9 +163,9 @@ export const deleteGroupApi = async (groupId) => {
 
     await deleteDoc(groupRef);
 
-    console.log(`Document with ID ${groupId} successfully deleted!`);
+    return getResponse("Document with ID ${groupId} successfully deleted!");
   } catch (error) {
-    console.error("Error removing document: ", error);
+    return getResponse(error.message).GENERAL_ERROR;
   }
 };
 
@@ -183,23 +177,21 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
     const docSnap = await getDoc(groupRef);
 
     if (!docSnap.exists()) {
-      throw new Error("Group " + groupId + " does not exist");
+      return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
     }
 
     const group = await docSnap.data();
-    console.log("group", group);
-    console.log("uid", uid);
-    console.log("admin_id", group.admin_id);
+
     if (group.admin_id !== uid) {
-      throw new Error("You don't have permission to add to this group");
+      return getResponse("You don't have permission to add to this group")
+        .PERMISSION;
     }
-    console.log("docSnap", group);
-    const newUserIds = Array.from(new Set([...group.users_ids, userId]));
+
     await setDoc(
       groupRef,
       {
         ...group,
-        users_ids: newUserIds,
+        users_ids: arrayUnion(userId),
       },
       { merge: true }
     );
@@ -207,17 +199,19 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
     const docUserSnap = await getDoc(userRef);
 
     if (!docUserSnap.exists()) {
-      throw new Error("User " + userId + " does not exist");
+      return getResponse("User " + userId + " does not exist").NOT_FOUND;
     }
     const user = await docUserSnap.data();
-    console.log("user", user);
 
     await updateDoc(userRef, {
       groups_ids: arrayUnion(groupId),
     });
-    console.log("User " + userId + "added successfully to Group " + groupId);
+
+    return getResponse(
+      "User " + userId + "added successfully to Group " + groupId
+    ).PERMISSION;
   } catch (error) {
-    throw error.message;
+    return getResponse(error.message).GENERAL_ERROR;
   }
 };
 export const addExpenseToGroupApi = async ({
@@ -232,11 +226,11 @@ export const addExpenseToGroupApi = async ({
     const docSnap = await getDoc(groupRef);
 
     if (!docSnap.exists()) {
-      throw new Error("Group " + groupId + " does not exist");
+      return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
     }
 
     const group = await docSnap.data();
-    console.log("docSnap", group);
+
     const newExpense = {
       user_id: uid,
       amount: expenseAmount,
@@ -251,11 +245,11 @@ export const addExpenseToGroupApi = async ({
       { merge: true }
     );
 
-    console.log(
+    return getResponse(
       "Expense " + expenseName + "added successfully to Group " + groupId
-    );
+    ).SUCCESS;
   } catch (error) {
-    throw error.message;
+    return getResponse(error.message).GENERAL_ERROR;
   }
 };
 
@@ -267,21 +261,22 @@ export const updateGroupNameApi = async ({ groupId, groupName }) => {
     const docSnap = await getDoc(groupRef);
 
     if (!docSnap.exists()) {
-      throw new Error("Group " + groupId + " does not exist");
+      return getResponse("Group " + groupName + " does not exist").NOT_FOUND;
     }
-
     const group = await docSnap.data();
-    console.log("docSnap", group);
+
+    if (group.admin_id !== uid) {
+      return getResponse("You don't have permission to delete this group")
+        .PERMISSION;
+    }
 
     await updateDoc(groupRef, {
       ...group,
       name: groupName,
     });
-    console.log("group name has been updated");
+
+    return getResponse("group name has been updated").SUCCESS;
   } catch (error) {
-    throw error.message;
+    return getResponse(error.message).GENERAL_ERROR;
   }
-};
-const getString = (dataArr) => {
-  return dataArr.join(",");
 };

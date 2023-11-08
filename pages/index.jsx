@@ -14,52 +14,61 @@ import {
 import React, { useEffect } from "react";
 
 export default function index() {
-  const signUp = () => {
-    signupApi({
+  const signUp = async () => {
+    const data = await signupApi({
       name: "adi",
-      email: "adi12@gmail.com",
+      email: "ida2@gmail.com",
       password: "password2121",
       phone: "0542223113",
     });
+    console.log(data);
   };
 
-  const login = () => {
-    loginApi({
-      email: "adi12@gmail.com",
+  const login = async () => {
+    const data = await loginApi({
+      email: "ida2@gmail.com",
       password: "password2121",
     });
+    console.log(data);
   };
-  const getUserById = () => {
-    getUserByIdApi("b0jXe1B40EXCtRBUV0dVUakkDdB2");
+  const getUserById = async () => {
+    const data = await getUserByIdApi("JFFdzbd6F7UDa0L57eMxHETZBW82");
+    console.log(data);
   };
 
-  const createGroup = () => {
-    createGroupApi("nwe one 7 ");
+  const createGroup = async () => {
+    const data = await createGroupApi("group bset 122s");
+    console.log(data);
   };
-  const deleteGroup = () => {
-    deleteGroupApi("s9orxr9KzKDCMXZYzl3z");
+  const deleteGroup = async () => {
+    const data = await deleteGroupApi("njn6PZEE1BOpK66qUgaJ");
+    console.log(data);
   };
-  const addUserToGroup = () => {
-    addUserToGroupApi({
-      userId: "EFTQ9RcLOceRHHuoVVcy7gywKTn1",
-      groupId: "s9orxr9KzKDCMXZYzl3z",
+  const addUserToGroup = async () => {
+    const data = await addUserToGroupApi({
+      userId: "T2m8IM0gpLU4ulAkWNHVZWlH1No1",
+      groupId: "njn6PZEE1BOpK66qUgaJ",
     });
+    console.log(data);
   };
-  const addExpenseToGroup = () => {
-    addExpenseToGroupApi({
-      groupId: "s9orxr9KzKDCMXZYzl3z",
-      expenseName: "Arnona",
-      expenseAmount: 220,
+  const addExpenseToGroup = async () => {
+    const data = await addExpenseToGroupApi({
+      groupId: "njn6PZEE1BOpK66qUgaJ",
+      expenseName: "Arnona3",
+      expenseAmount: 21,
     });
+    console.log(data);
   };
-  const findGroupById = () => {
-    findGroupByIdApi("9fo2IXkfiyOzhr7QyOPU48nYjfJ2_best group");
+  const findGroupById = async () => {
+    const data = await findGroupByIdApi("njn6PZEE1BOpK66qUgaJ");
+    console.log(data);
   };
-  const updateGroupName = () => {
-    updateGroupNameApi({
-      groupId: "s9orxr9KzKDCMXZYzl3z",
-      groupName: "new sex",
+  const updateGroupName = async () => {
+    const data = await updateGroupNameApi({
+      groupId: "njn6PZEE1BOpK66qUgaJ",
+      groupName: "sex group",
     });
+    console.log(data);
   };
   return (
     <div
