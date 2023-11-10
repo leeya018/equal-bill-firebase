@@ -8,22 +8,24 @@ import Image from "next/image";
 export default function BlackBlock() {
   return (
     <div
-      className="mb-5 mx-5 p-6 border-2
+      className="mb-1 mx-5 p-4 border-2
      border-gray rounded-2xl  text-white
   flex justify-start gap-10 bg-zebra"
     >
       {/* <PieChart style={{ width: "10%", height: "10%" }} /> */}
-      <Image
-        alt="profile image"
-        width={96}
-        height={96}
-        className="rounded-full "
-        src={"/me.jpg"}
-      />
-      <div className="flex flex-col  justify-around gap-4">
-        <div className="font-semibold text-lg">My Balance </div>
-        <div className="font-bold text-5xl">1000000000</div>
-        <div className="font-semibold text-lg">
+      <div className="flex justify-center items-center">
+        <Image
+          alt="profile image"
+          width={55}
+          height={55}
+          className="rounded-full "
+          src={"/me.jpg"}
+        />
+      </div>
+      <div className="flex flex-col  justify-around gap-2">
+        <div className="font-semibold text-md">My Balance </div>
+        <div className="font-bold text-2xl">1000000000</div>
+        <div className="font-semibold text-md">
           Show account balance in <span className="text-[#7987B4]"> USD</span>
         </div>
       </div>

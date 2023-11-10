@@ -51,6 +51,6 @@ export const data = {
   ],
 };
 
-export default function VerticalChart() {
-  return <Bar options={options} data={data} className="mx-5" />;
+export default function VerticalChart({ style }) {
+  return <Bar options={options} data={data} style={style} className="mx-5" />;
 }

@@ -20,16 +20,16 @@ export default function Groups() {
 function Group({ className }) {
   return (
     <div
-      className={`p-7 flex flex-col border-2 border-gray
-      rounded-xl gap-2 ${className}`}
+      className={`p-3 flex flex-col border-2 border-gray
+      rounded-xl gap-1 ${className}`}
     >
       <BiBell
-        size={30}
+        size={20}
         color="black"
-        className="border-2 rounded-full bg-white mb-3"
+        className="border-2 rounded-full bg-white mb-2"
       />
-      <div className="text-xl font-semibold">Group Name</div>
-      <div className="text-gray ">Category</div>
+      <div className="text-lg font-semibold">Group Name</div>
+      <div className="text-gray text-sm">Category</div>
     </div>
   );
 }

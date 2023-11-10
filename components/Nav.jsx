@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Nav() {
   return (
-    <div className="mb-4  bg-white w-full flex justify-between items-center text-black">
+    <div className="  bg-white w-full flex justify-between items-center text-black">
       <div className=" p-5 flex justify-between items-center w-full  ">
         <div className="relative flex items-center w-[60%]">
           <BiBell size={20} color="gray" className="absolute my-auto left-2 " />
@@ -12,18 +12,18 @@ export default function Nav() {
           <input
             type="text"
             placeholder="Search"
-            className="pl-10 h-14  w-full border-2 border-gray rounded-xl"
+            className="pl-10 h-10  w-full border-2 border-gray rounded-xl"
           />
         </div>
         <div className="flex gap-6 items-center">
-          <BiBell size={30} color="gray" />
-          <BiBell size={30} color="gray" />
-          <BiBell size={30} color="gray" />
+          <BiBell size={20} color="gray" />
+          <BiBell size={20} color="gray" />
+          <BiBell size={20} color="gray" />
 
           <Image
             alt="profile image"
-            width={40}
-            height={40}
+            width={30}
+            height={30}
             className="rounded-full "
             src={"/me.jpg"}
           />
