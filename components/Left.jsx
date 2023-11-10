@@ -1,5 +1,7 @@
 import * as React from "react";
 import Nav from "./Nav";
+import { BiBell } from "react-icons/bi";
+import Title from "./Titlle";
 
 export default function Left() {
   return (
@@ -9,7 +11,7 @@ export default function Left() {
 
         <Nav />
         {/* title */}
-        <div>inarstein</div>
+        <Title />
         {/* black block */}
         <div>inarstein</div>
         {/* groups items */}

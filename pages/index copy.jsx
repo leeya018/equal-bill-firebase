@@ -79,55 +79,55 @@ export default function index() {
       <div>
         <button
           onClick={signUp}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           signup
         </button>
         <button
           onClick={login}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           login
         </button>
         <button
           onClick={getUserById}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           getUserById
         </button>
         <button
           onClick={createGroup}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           createGroup
         </button>
         <button
           onClick={deleteGroup}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           deleteGroup
         </button>
         <button
           onClick={addUserToGroup}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           addUserToGroup
         </button>
         <button
           onClick={addExpenseToGroup}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           addExpenseToGroup
         </button>
         <button
           onClick={findGroupById}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           findGroupById
         </button>
         <button
           onClick={updateGroupName}
-          className=" border-2 border-black rounded-md bg-blue text=white px-6 py-4"
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           updateGroupNameApi
         </button>
