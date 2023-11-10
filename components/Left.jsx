@@ -2,6 +2,9 @@ import * as React from "react";
 import Nav from "./Nav";
 import { BiBell } from "react-icons/bi";
 import Title from "./Titlle";
+import PieChart from "./PieChart";
+import Image from "next/image";
+import BlackBlock from "./BlackBlock";
 
 export default function Left() {
   return (
@@ -13,7 +16,7 @@ export default function Left() {
         {/* title */}
         <Title />
         {/* black block */}
-        <div>inarstein</div>
+        <BlackBlock />
         {/* groups items */}
         <div>inarstein</div>
         {/* Grapth */}

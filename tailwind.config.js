@@ -24,7 +24,11 @@ module.exports = {
       yellow: "#e8ef23",
       blueL_bank: "#2697FF",
     },
-    extend: {},
+    extend: {
+      backgroundImage: {
+        zebra: "url('/zebra.png')",
+      },
+    },
   },
   plugins: [],
 };
