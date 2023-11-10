@@ -7,6 +7,7 @@ import Image from "next/image";
 import BlackBlock from "./BlackBlock";
 import Groups from "./Groups";
 import VerticalChart from "./VerticalChart";
+import GroupGraphResult from "./GroupGraphResult";
 
 export default function Left() {
   return (
@@ -22,7 +23,7 @@ export default function Left() {
         {/* groups items */}
         <Groups />
         {/* Grapth */}
-        <VerticalChart />
+        <GroupGraphResult />
       </div>
     </div>
   );
