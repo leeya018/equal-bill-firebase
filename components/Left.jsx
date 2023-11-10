@@ -5,6 +5,7 @@ import Title from "./Titlle";
 import PieChart from "./PieChart";
 import Image from "next/image";
 import BlackBlock from "./BlackBlock";
+import Groups from "./Groups";
 
 export default function Left() {
   return (
@@ -18,8 +19,19 @@ export default function Left() {
         {/* black block */}
         <BlackBlock />
         {/* groups items */}
-        <div>inarstein</div>
+        <Groups />
         {/* Grapth */}
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
+        <div>inarstein</div>
         <div>inarstein</div>
       </div>
     </div>
