@@ -11,7 +11,7 @@ import GroupGraphResult from "./GroupGraphResult";
 
 export default function Left() {
   return (
-    <div className="h-full w-[70%]">
+    <div className="h-full w-[75%]">
       <div className="flex flex-col">
         {/* nav */}
 
