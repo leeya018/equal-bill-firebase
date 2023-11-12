@@ -71,7 +71,6 @@ export default function signup() {
               className="mb-2 border-2 border-[#4B6DCF] text-semibold rounded-md h-9 pl-2 w-full focus:border-custom-blue"
             />
             <input
-              ref={inputRef}
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

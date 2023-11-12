@@ -1,14 +1,14 @@
 import React from "react";
 
 export default function Input({
-  ref = null,
+  inputRef = null,
   value = "",
   onChange = () => {},
   placeholder = "",
 }) {
   return (
     <input
-      ref={ref}
+      ref={inputRef}
       value={value}
       onChange={onChange}
       type="text"

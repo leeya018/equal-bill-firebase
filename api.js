@@ -281,3 +281,26 @@ export const updateGroupNameApi = async ({ groupId, groupName }) => {
     return getResponse(error.message).GENERAL_ERROR;
   }
 };
+export const getMyGroupsApi = async () => {
+  try {
+    const uid = auth.currentUser.uid;
+
+    const userRef = doc(db, "users", uid);
+    const docSnap = await getDoc(userRef);
+    const user = await docSnap.data();
+    console.log("user", user);
+    console.log(user.groups_ids);
+
+    const groups = await Promise.all(
+      user.groups_ids.map(async (groupId) => {
+        const groupRef = doc(db, "groups", groupId);
+        const docSnap = await getDoc(groupRef);
+        return await docSnap.data();
+      })
+    );
+    console.log(groups);
+    return getResponse(groups).SUCCESS;
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR;
+  }
+};

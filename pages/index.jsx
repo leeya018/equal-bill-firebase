@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Left from "components/left";
 import Right from "components/right";
-import AddGroupModal from "components/modal/group/add";
 import SuccessModal from "components/modal/message/success";
-import EditGroupModal from "components/modal/group/edit";
+import { GroupsStore } from "mobx/groupsStore";
 
-export default function index() {
+import { observer } from "mobx-react-lite";
+
+const index = observer(({}) => {
+  const { getMyGroups, myGroups } = GroupsStore;
+  useEffect(() => {
+    getMyGroups();
+  }, []);
   return (
     <div className="flex gap-2 w-[100vw]  h-[100vh]">
       <SuccessModal />
@@ -13,4 +18,6 @@ export default function index() {
       <Right />
     </div>
   );
-}
+});
+
+export default index;

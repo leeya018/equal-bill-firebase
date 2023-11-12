@@ -72,7 +72,7 @@ const EditGroupModal = observer(({ groupName, groupId }) => {
         <div className="flex flex-col  gap-3  w-full px-10">
           <div className="text-lg font-bold">Group Name:</div>
           <Input
-            ref={inputRef}
+            inputRef={inputRef}
             value={name}
             onChange={(e) => setName(e.target.value)}
             type="text"
