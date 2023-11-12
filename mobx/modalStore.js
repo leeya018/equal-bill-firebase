@@ -15,4 +15,4 @@ class Modal {
   };
 }
 
-export const modalStore = new Modal();
+export const ModalStore = new Modal();

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../firebase";
 import { signinApi } from "api";
-import { messageStore } from "mobx/messageStore";
+import { MessageStore } from "mobx/messageStore";
 import Alerts from "components/Alerts";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";
@@ -14,7 +14,7 @@ const signin = observer(({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setSuccess, setError } = messageStore;
+  const { setSuccess, setError } = MessageStore;
 
   useEffect(() => {
     inputRef.current.focus();

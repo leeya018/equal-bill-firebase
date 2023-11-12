@@ -1,12 +1,13 @@
 import AddGroupModal from "components/modal/group/add";
 import EditGroupModal from "components/modal/group/edit";
 import { GroupsStore } from "mobx/groupsStore";
-import { modalStore } from "mobx/modalStore";
+import { ModalStore } from "mobx/modalStore";
 import * as React from "react";
 
 import { BiBell } from "react-icons/bi";
 import { modals } from "util";
 import { observer } from "mobx-react-lite";
+import { toJS } from "mobx";
 
 const Groups = observer(({}) => {
   const { getMyGroups, myGroups, setChosenGroup } = GroupsStore;
@@ -20,9 +21,11 @@ const Groups = observer(({}) => {
       <AddGroupModal />
       <AddGroup />
       <>
-        {myGroups?.map((group, key) => (
-          <Group key={key} className="bg-[#FFFBEF]" group={group} />
-        ))}
+        {myGroups
+          ?.map((group, key) => (
+            <Group key={key} className="bg-[#FFFBEF]" group={group} />
+          ))
+          .reverse()}
       </>
     </div>
   );
@@ -35,7 +38,7 @@ const AddGroup = observer(({}) => {
     <div
       className={`p-7 flex flex-col items-center justify-center border-2 border-gray
       rounded-xl gap-1 cursor-pointer`}
-      onClick={() => modalStore.openModal(modals.add_group)}
+      onClick={() => ModalStore.openModal(modals.add_group)}
     >
       <BiBell
         size={20}
@@ -49,8 +52,9 @@ const AddGroup = observer(({}) => {
 
 const Group = observer(({ group, className }) => {
   const onClickGroup = () => {
+    console.log("onClickGroup", toJS(group));
     GroupsStore.setChosenGroup(group);
-    modalStore.openModal(modals.edit_group);
+    ModalStore.openModal(modals.edit_group);
   };
   return (
     <div

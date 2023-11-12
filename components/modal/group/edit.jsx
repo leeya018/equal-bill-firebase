@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 
-import { modalStore } from "mobx/modalStore";
+import { ModalStore } from "mobx/modalStore";
 import { observer } from "mobx-react-lite";
 
 import { createGroupApi, deleteGroupApi, updateGroupNameApi } from "api";
-import { messageStore } from "mobx/messageStore";
+import { MessageStore } from "mobx/messageStore";
 import Alerts from "components/Alerts";
 import ApproveButton from "ui/button/modal/approve";
 import CloseButton from "ui/button/modal/close";
@@ -17,9 +17,9 @@ import { toJS } from "mobx";
 const EditGroupModal = observer(() => {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setSuccess, setError } = messageStore;
+  const { setSuccess, setError } = MessageStore;
 
-  const { modalName, closeModal, openModal } = modalStore;
+  const { modalName, closeModal, openModal } = ModalStore;
   const { getMyGroups, chosenGroup, setChosenGroup } = GroupsStore;
 
   const inputRef = useRef();
@@ -31,37 +31,6 @@ const EditGroupModal = observer(() => {
   useEffect(() => {
     setName(chosenGroup?.name);
   }, [chosenGroup?.name]);
-
-  const updateGroupName = async () => {
-    console.log("chosenGroup", toJS(chosenGroup));
-    const data = await GroupsStore.updateGroupName({
-      groupId: chosenGroup.id,
-      groupName: name,
-    });
-    console.log(data);
-    if (data.isSuccess) {
-      setSuccess(data.message);
-      openModal(modals.success_message);
-    } else {
-      setError(data.message);
-    }
-    console.log(data);
-    setIsLoading(false);
-  };
-  const deleteGroup = async () => {
-    const data = await deleteGroupApi(chosenGroup.id);
-    console.log(data);
-    if (data.isSuccess) {
-      setSuccess(data.message);
-      openModal(modals.success_message);
-
-      setChosenGroup(null);
-    } else {
-      setError(data.message);
-    }
-    console.log(data);
-    setIsLoading(false);
-  };
 
   return (
     <div
@@ -88,10 +57,23 @@ const EditGroupModal = observer(() => {
           <Alerts />
         </div>
         <div className="w-full flex justify-center items-center gap-5 py-4 bg-[#F2F2F2] ">
-          <ApproveButton onClick={updateGroupName} isLoading={isLoading}>
+          <ApproveButton
+            onClick={() => {
+              console.log("ApproveButton onClick", toJS(chosenGroup));
+
+              GroupsStore.updateGroupName({
+                groupId: chosenGroup.id,
+                groupName: name,
+              });
+            }}
+            isLoading={isLoading}
+          >
             Update Group
           </ApproveButton>
-          <ApproveButton onClick={deleteGroup} isLoading={isLoading}>
+          <ApproveButton
+            onClick={() => GroupsStore.removeGroup(chosenGroup.id)}
+            isLoading={isLoading}
+          >
             Delete Group
           </ApproveButton>
         </div>

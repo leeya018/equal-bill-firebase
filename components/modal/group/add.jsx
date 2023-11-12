@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 
-import { modalStore } from "mobx/modalStore";
+import { ModalStore } from "mobx/modalStore";
 import { observer } from "mobx-react-lite";
 
 import { createGroupApi } from "api";
-import { messageStore } from "mobx/messageStore";
+import { MessageStore } from "mobx/messageStore";
 import Alerts from "components/Alerts";
 import ApproveButton from "ui/button/modal/approve";
 import CloseButton from "ui/button/modal/close";
@@ -15,28 +15,16 @@ import { GroupsStore } from "mobx/groupsStore";
 
 const AddGroupModal = observer(() => {
   const [name, setName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { setSuccess, setError } = messageStore;
 
-  const { modalName, openModal, closeModal } = modalStore;
+  const { setSuccess, setError } = MessageStore;
+
+  const { modalName, openModal, closeModal } = ModalStore;
 
   const inputRef = useRef();
 
   useEffect(() => {
     // inputRef.current.focus();
   }, []);
-
-  const createGroup = async () => {
-    setIsLoading(true);
-    const data = await GroupsStore.createGroup(name);
-    if (data.isSuccess) {
-      setSuccess(data.message);
-      openModal(modals.success_message);
-    } else {
-      setError(data.message);
-    }
-    setIsLoading(false);
-  };
 
   return (
     <div
@@ -63,7 +51,10 @@ const AddGroupModal = observer(() => {
           <Alerts />
         </div>
         <div className="w-full flex justify-center items-center py-4 bg-[#F2F2F2] ">
-          <ApproveButton onClick={createGroup} isLoading={false}>
+          <ApproveButton
+            onClick={() => GroupsStore.createGroup(name)}
+            isLoading={false}
+          >
             Create Group
           </ApproveButton>
         </div>

@@ -9,7 +9,9 @@ import { observer } from "mobx-react-lite";
 const index = observer(({}) => {
   const { getMyGroups, myGroups } = GroupsStore;
   useEffect(() => {
-    getMyGroups();
+    setTimeout(() => {
+      getMyGroups();
+    }, 1000);
   }, []);
   return (
     <div className="flex gap-2 w-[100vw]  h-[100vh]">

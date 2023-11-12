@@ -120,12 +120,16 @@ export const createGroupApi = async (groupName) => {
       expenses: [],
       users_ids: [uid],
     });
+    const addedGroup = await getDoc(groupDocRef);
     const userRef = doc(db, "users", uid); // Replace 'groups' with your actual collection name
 
     await updateDoc(userRef, {
       groups_ids: arrayUnion(groupDocRef.id),
     });
-    return getResponse("group created").SUCCESS;
+    return getResponse("group created", {
+      ...addedGroup.data(),
+      id: groupDocRef.id,
+    }).SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;
   }
@@ -149,7 +153,7 @@ export const deleteGroupApi = async (groupId) => {
     if (!docSnap.exists()) {
       return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
     }
-    const foundGroup = await docSnap.data();
+    const foundGroup = docSnap.data();
     if (foundGroup.admin_id !== uid) {
       return getResponse("You don't have permission to delete this group")
         .PERMISSION;
@@ -164,7 +168,8 @@ export const deleteGroupApi = async (groupId) => {
 
     await deleteDoc(groupRef);
 
-    return getResponse("Document with ID ${groupId} successfully deleted!");
+    return getResponse("Document with ID ${groupId} successfully deleted!")
+      .SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;
   }
@@ -181,7 +186,7 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
       return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
     }
 
-    const group = await docSnap.data();
+    const group = docSnap.data();
 
     if (group.admin_id !== uid) {
       return getResponse("You don't have permission to add to this group")
@@ -202,7 +207,7 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
     if (!docUserSnap.exists()) {
       return getResponse("User " + userId + " does not exist").NOT_FOUND;
     }
-    const user = await docUserSnap.data();
+    const user = docUserSnap.data();
 
     await updateDoc(userRef, {
       groups_ids: arrayUnion(groupId),
@@ -230,7 +235,7 @@ export const addExpenseToGroupApi = async ({
       return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
     }
 
-    const group = await docSnap.data();
+    const group = docSnap.data();
 
     const newExpense = {
       user_id: uid,
@@ -265,7 +270,7 @@ export const updateGroupNameApi = async ({ groupId, groupName }) => {
     if (!docSnap.exists()) {
       return getResponse("Group " + groupName + " does not exist").NOT_FOUND;
     }
-    const group = await docSnap.data();
+    const group = docSnap.data();
 
     if (group.admin_id !== uid) {
       return getResponse("You don't have permission to delete this group")
@@ -289,7 +294,7 @@ export const getMyGroupsApi = async () => {
 
     const userRef = doc(db, "users", uid);
     const docSnap = await getDoc(userRef);
-    const user = await docSnap.data();
+    const user = docSnap.data();
     console.log("user", user);
     console.log(user.groups_ids);
 
@@ -298,7 +303,7 @@ export const getMyGroupsApi = async () => {
         const groupRef = doc(db, "groups", groupId);
         const docSnap = await getDoc(groupRef);
 
-        const group = await docSnap.data();
+        const group = docSnap.data();
         return { ...group, id: groupId };
       })
     );
@@ -306,6 +311,7 @@ export const getMyGroupsApi = async () => {
 
     return getResponse("groups fetch successfully ", groups).SUCCESS;
   } catch (error) {
+    console.log(error.message);
     return getResponse(error.message).GENERAL_ERROR;
   }
 };

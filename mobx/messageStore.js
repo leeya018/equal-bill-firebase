@@ -23,4 +23,4 @@ class Message {
   };
 }
 
-export const messageStore = new Message();
+export const MessageStore = new Message();

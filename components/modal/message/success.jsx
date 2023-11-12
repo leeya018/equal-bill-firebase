@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 
-import { modalStore } from "mobx/modalStore";
+import { ModalStore } from "mobx/modalStore";
 import { observer } from "mobx-react-lite";
 
-import { messageStore } from "mobx/messageStore";
+import { MessageStore } from "mobx/messageStore";
 
 import { modals } from "@/util";
 
@@ -13,9 +13,9 @@ import SuccessButton from "ui/button/modal/success";
 const SuccessModal = observer(() => {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { setSuccess, success, setError } = messageStore;
+  const { setSuccess, success, setError } = MessageStore;
 
-  const { modalName, closeModal } = modalStore;
+  const { modalName, closeModal } = ModalStore;
 
   return (
     <div
@@ -36,7 +36,14 @@ const SuccessModal = observer(() => {
           <div className="text-xl font-bold  text-[#35d08c]">{success}</div>
         </div>
         <div className="w-full flex justify-center items-center gap-5 py-4 bg-[#F2F2F2] ">
-          <SuccessButton onClick={() => closeModal()}>Done</SuccessButton>
+          <SuccessButton
+            onClick={() => {
+              closeModal();
+              MessageStore.setSuccess("");
+            }}
+          >
+            Done
+          </SuccessButton>
         </div>
       </div>
     </div>
