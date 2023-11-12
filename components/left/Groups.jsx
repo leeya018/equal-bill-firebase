@@ -1,5 +1,6 @@
 import AddGroupModal from "components/modal/group/add";
 import EditGroupModal from "components/modal/group/edit";
+import { GroupsStore } from "mobx/groupsStore";
 import { modalStore } from "mobx/modalStore";
 import * as React from "react";
 
@@ -7,6 +8,8 @@ import { BiBell } from "react-icons/bi";
 import { modals } from "util";
 
 export default function Groups() {
+  const { getMyGroups, myGroups } = GroupsStore;
+
   return (
     <div
       className="mx-6 py-5 flex justify-start gap-4 items-center
@@ -15,11 +18,11 @@ export default function Groups() {
       <EditGroupModal groupName={"trstrs"} groupId={"yQ25DtzvCMHf9EKpd9qd"} />
       <AddGroupModal />
       <AddGroup />
-      <Group className="bg-[#FFFBEF]" />
-      <Group className="bg-[#F0F4FF]" />
-      <Group className="bg-[#FEF8FC]" />
-      <Group className="bg-[#F8F9FE]" />
-      <Group className="bg-[#FFFBEF]" />
+      <>
+        {myGroups.map((group, key) => (
+          <Group key={key} className="bg-[#FFFBEF]" group={group} />
+        ))}
+      </>
     </div>
   );
 }
@@ -40,7 +43,7 @@ function AddGroup({}) {
     </div>
   );
 }
-function Group({ className }) {
+function Group({ className, group }) {
   return (
     <div
       className={`p-3 flex flex-col border-2 border-gray
@@ -51,7 +54,7 @@ function Group({ className }) {
         color="black"
         className="border-2 rounded-full bg-white mb-2"
       />
-      <div className="text-lg font-semibold">Group Name</div>
+      <div className="text-lg font-semibold">{group.name}</div>
       <div className="text-gray text-sm">Category</div>
     </div>
   );

@@ -17,7 +17,7 @@ class Groups {
 
   getMyGroups = async () => {
     const data = await getMyGroupsApi();
-    // this.myGroups = [...data];
+    this.myGroups = [...data.data];
   };
 }
 

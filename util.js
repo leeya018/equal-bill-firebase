@@ -1,9 +1,10 @@
-export const getResponse = (message) => {
+export const getResponse = (message, data = "") => {
   return {
     SUCCESS: {
       status: 200,
       message,
       isSuccess: true,
+      data,
     },
     PERMISSION: {
       status: 401,

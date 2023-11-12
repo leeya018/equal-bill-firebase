@@ -299,7 +299,7 @@ export const getMyGroupsApi = async () => {
       })
     );
     console.log(groups);
-    return getResponse(groups).SUCCESS;
+    return getResponse("groups fetch successfully ", groups).SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;
   }
