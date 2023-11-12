@@ -220,11 +220,7 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
     return getResponse(error.message).GENERAL_ERROR;
   }
 };
-export const addExpenseToGroupApi = async ({
-  groupId,
-  expenseName,
-  expenseAmount,
-}) => {
+export const addExpenseToGroupApi = async ({ groupId, name, amount }) => {
   try {
     const uid = auth.currentUser.uid;
 
@@ -239,8 +235,8 @@ export const addExpenseToGroupApi = async ({
 
     const newExpense = {
       user_id: uid,
-      amount: expenseAmount,
-      name: expenseName,
+      amount,
+      name,
     };
     await setDoc(
       groupRef,
@@ -252,7 +248,7 @@ export const addExpenseToGroupApi = async ({
     );
 
     return getResponse(
-      "Expense " + expenseName + "added successfully to Group " + groupId
+      "Expense " + name + "added successfully to Group " + groupId
     ).SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;

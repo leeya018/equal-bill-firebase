@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiBell } from "react-icons/bi";
 import Expenses from "./Expenses";
 import PieChart from "components/left/PieChart";
 import ChartResults from "./ChartResults";
+import { GroupsStore } from "mobx/groupsStore";
 
-export default function Right() {
-  const [expenses, setExpenses] = useState([1, 2, 3, 4]);
+import { observer } from "mobx-react-lite";
+
+const Right = observer(({}) => {
+  const [expenses, setExpenses] = useState([]);
+  useEffect(() => {
+    if (GroupsStore.chosenGroup) {
+      setExpenses(GroupsStore.chosenGroup.expenses);
+    } else {
+      setExpenses(GroupsStore.myGroups.map((g) => g.expenses).flat());
+    }
+  }, [GroupsStore.chosenGroup]);
 
   return (
     <div className="h-full w-[25%] ">
@@ -19,7 +29,9 @@ export default function Right() {
       </div>
     </div>
   );
-}
+});
+
+export default Right;
 
 function Transfer() {
   return (

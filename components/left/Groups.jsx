@@ -4,7 +4,7 @@ import { GroupsStore } from "mobx/groupsStore";
 import { ModalStore } from "mobx/modalStore";
 import * as React from "react";
 
-import { BiBell } from "react-icons/bi";
+import { BiBell, BiEditAlt } from "react-icons/bi";
 import { modals } from "util";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
@@ -36,12 +36,12 @@ export default Groups;
 const AddGroup = observer(({}) => {
   return (
     <div
-      className={`p-7 flex flex-col items-center justify-center border-2 border-gray
+      className={` flex flex-col items-center justify-center border-2 border-gray w-32 h-32
       rounded-xl gap-1 cursor-pointer`}
       onClick={() => ModalStore.openModal(modals.add_group)}
     >
       <BiBell
-        size={20}
+        size={32}
         color="black"
         className="border-2 rounded-full bg-white mb-2"
       />
@@ -51,22 +51,39 @@ const AddGroup = observer(({}) => {
 });
 
 const Group = observer(({ group, className }) => {
-  const onClickGroup = () => {
+  const onClickGroup = (e) => {
+    e.stopPropagation();
     console.log("onClickGroup", toJS(group));
     GroupsStore.setChosenGroup(group);
     ModalStore.openModal(modals.edit_group);
   };
   return (
     <div
-      className={`p-3 flex flex-col border-2 border-gray
-      rounded-xl gap-1 cursor-pointer ${className}`}
-      onClick={onClickGroup}
+      className={`p-3 flex flex-col border-2 border-gray w-32 h-32  
+      rounded-xl gap-1 cursor-pointer ${className} ${
+        GroupsStore.chosenGroup?.id === group.id && "border-[#7987B4]"
+      }`}
+      onClick={() => {
+        if (GroupsStore.chosenGroup?.id === group.id) {
+          GroupsStore.setChosenGroup(null);
+        } else {
+          GroupsStore.setChosenGroup(group);
+        }
+      }}
     >
-      <BiBell
-        size={20}
-        color="black"
-        className="border-2 rounded-full bg-white mb-2"
-      />
+      <div className="flex justify-between items-center">
+        <BiBell
+          size={20}
+          color="black"
+          className="border-2 rounded-full bg-white mb-2"
+        />
+        <BiEditAlt
+          onClick={onClickGroup}
+          size={20}
+          color="black"
+          className=" bg-white mb-2"
+        />
+      </div>
       <div className="text-lg font-semibold">{group.name}</div>
       <div className="text-gray text-sm">Category</div>
     </div>

@@ -32,5 +32,6 @@ export const getResponse = (message, data = "") => {
 export const modals = {
   add_group: "add_group",
   edit_group: "edit_group",
+  add_expense: "add_expense",
   success_message: "success_message",
 };

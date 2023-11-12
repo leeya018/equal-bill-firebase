@@ -1,4 +1,5 @@
 import {
+  addExpenseToGroupApi,
   createGroupApi,
   deleteGroupApi,
   getMyGroupsApi,
@@ -91,6 +92,33 @@ class Groups {
       this.messageStore.setSuccess(data.message);
       this.modalStore.openModal(modals.success_message);
       this.myGroups.push(data.data);
+    } else {
+      this.messageStore.setError(data.message);
+    }
+    this.asyncStore.setIsLoading(false);
+  };
+
+  addExpense = async ({ groupId, name, amount }) => {
+    this.asyncStore.setIsLoading(true);
+    const data = await addExpenseToGroupApi({
+      groupId,
+      name,
+      amount,
+    });
+    if (data.isSuccess) {
+      console.log("addExpense", data.data);
+      this.messageStore.setSuccess(data.message);
+      this.modalStore.openModal(modals.success_message);
+      const newExpense = { name, amount, date: new Date() };
+      this.chosenGroup.expenses.push(newExpense);
+      this.myGroups = this.myGroups.map((group, i) => {
+        if (group.id === this.chosenGroup.id) {
+          let groupDup = { ...group };
+          groupDup.expenses.push(newExpense);
+          return groupDup;
+        }
+        return group;
+      });
     } else {
       this.messageStore.setError(data.message);
     }
