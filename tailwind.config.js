@@ -24,11 +24,17 @@ module.exports = {
       yellow: "#e8ef23",
       blueL_bank: "#2697FF",
     },
+    borderColor: {
+      "custom-blue": "#4B6DCF",
+    },
     extend: {
       backgroundImage: {
         zebra: "url('/zebra.png')",
+        equal_bill: "url('/equal_bill.png')",
+        google: "url('/google.png')",
       },
     },
   },
   plugins: [],
+  // plugins: [require("tailwind-scrollbar")({ nocompatible: true })],
 };

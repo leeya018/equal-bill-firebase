@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Title() {
   return (
-    <div className="p-5 mb-1 w-full flex justify-between ">
+    <div className="p-3 mb-1 w-full flex justify-between ">
       <div className=" font-bold text-2xl">Earning</div>
       <button
         className="p-2 flex justify-around items-center 

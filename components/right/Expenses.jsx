@@ -7,10 +7,10 @@ import Expense from "./Expense";
 
 export default function Expenses({ expenses }) {
   return (
-    <div className="p-4 border-gray border-2 rounded-xl  w-full">
+    <div className="p-3 border-gray border-2 rounded-xl  w-full">
       <div className="font-semibold text-xl">Expenses</div>
       <div className="text-gray text-md">Recent Expenses</div>
-      <ul className=" flex flex-col items-center w-full mt-4">
+      <ul className=" flex flex-col items-center w-full mt-2">
         {expenses.map((expense, key) => (
           <Expense key={key} expense={expense} />
         ))}

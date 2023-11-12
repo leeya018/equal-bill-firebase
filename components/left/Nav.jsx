@@ -4,8 +4,11 @@ import Image from "next/image";
 
 export default function Nav() {
   return (
-    <div className="  bg-white w-full flex justify-between items-center text-black">
-      <div className=" p-5 flex justify-between items-center w-full  ">
+    <div
+      className="  bg-white w-full flex justify-between items-center
+     text-black"
+    >
+      <div className=" p-3 flex justify-between items-center w-full  ">
         <div className="relative flex items-center w-[60%]">
           <BiBell size={20} color="gray" className="absolute my-auto left-2 " />
 

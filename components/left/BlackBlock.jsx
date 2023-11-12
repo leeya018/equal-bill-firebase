@@ -8,11 +8,11 @@ import Image from "next/image";
 export default function BlackBlock() {
   return (
     <div
-      className="mb-1 mx-5 p-4 border-2
+      className="mb-1 mx-5 p-3 border-2
      border-gray rounded-2xl  text-white
   flex justify-start gap-10 bg-zebra"
     >
-      {/* <PieChart style={{ width: "10%", height: "10%" }} /> */}
+      {/* <PieChart style={{ width: 60, height: 60 }} /> */}
       <div className="flex justify-center items-center">
         <Image
           alt="profile image"

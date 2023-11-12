@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { BiBell } from "react-icons/bi";
 import Expenses from "./Expenses";
+import PieChart from "components/left/PieChart";
+import ChartResults from "./ChartResults";
 
 export default function Right() {
   const [expenses, setExpenses] = useState([1, 2, 3, 4]);
@@ -13,7 +15,7 @@ export default function Right() {
         {/* expenses */}
         <Expenses expenses={expenses} />
         {/* current results */}
-        <div>1</div>
+        <ChartResults />
       </div>
     </div>
   );

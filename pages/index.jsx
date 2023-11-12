@@ -1,6 +1,6 @@
 import React from "react";
 import Left from "components/left";
-import Right from "components/Right";
+import Right from "components/right";
 
 export default function index() {
   return (

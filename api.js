@@ -39,7 +39,8 @@ export const signupApi = async (user) => {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
-      password
+      password,
+      phone
     );
 
     const uid = userCredential.user.uid;
@@ -53,7 +54,7 @@ export const signupApi = async (user) => {
     return getResponse(error.message).GENERAL_ERROR;
   }
 };
-export const loginApi = async ({ email, password }) => {
+export const signinApi = async ({ email, password }) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
