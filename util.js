@@ -27,3 +27,8 @@ export const getResponse = (message) => {
     },
   };
 };
+
+export const modals = {
+  add_group: "add_group",
+  remove: "remove",
+};
