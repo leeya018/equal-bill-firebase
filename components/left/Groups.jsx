@@ -1,6 +1,10 @@
+import AddGroupModal from "components/modal/group/add";
+import EditGroupModal from "components/modal/group/edit";
+import { modalStore } from "mobx/modalStore";
 import * as React from "react";
 
 import { BiBell } from "react-icons/bi";
+import { modals } from "util";
 
 export default function Groups() {
   return (
@@ -8,6 +12,8 @@ export default function Groups() {
       className="mx-6 py-5 flex justify-start gap-4 items-center
   "
     >
+      <EditGroupModal groupName={"trstrs"} groupId={"yQ25DtzvCMHf9EKpd9qd"} />
+      <AddGroupModal />
       <AddGroup />
       <Group className="bg-[#FFFBEF]" />
       <Group className="bg-[#F0F4FF]" />
@@ -23,6 +29,7 @@ function AddGroup({}) {
     <div
       className={`p-7 flex flex-col items-center justify-center border-2 border-gray
       rounded-xl gap-1 cursor-pointer`}
+      onClick={() => modalStore.openModal(modals.add_group)}
     >
       <BiBell
         size={20}

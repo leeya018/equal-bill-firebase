@@ -30,5 +30,6 @@ export const getResponse = (message) => {
 
 export const modals = {
   add_group: "add_group",
-  remove: "remove",
+  edit_group: "edit_group",
+  success_message: "success_message",
 };

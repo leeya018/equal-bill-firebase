@@ -4,20 +4,20 @@ import { useRef } from "react";
 import { modalStore } from "mobx/modalStore";
 import { observer } from "mobx-react-lite";
 
-import { modals } from "../util";
-import { createGroupApi } from "api";
+import { createGroupApi, deleteGroupApi, updateGroupNameApi } from "api";
 import { messageStore } from "mobx/messageStore";
-import Alerts from "./Alerts";
+import Alerts from "components/Alerts";
 import ApproveButton from "ui/button/modal/approve";
 import CloseButton from "ui/button/modal/close";
 import Input from "ui/input";
+import { modals } from "@/util";
 
-const AddModal = observer(() => {
+const EditGroupModal = observer(({ groupName, groupId }) => {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { setSuccess, setError } = messageStore;
 
-  const { modalName, closeModal } = modalStore;
+  const { modalName, closeModal, openModal } = modalStore;
 
   const inputRef = useRef();
 
@@ -25,15 +25,34 @@ const AddModal = observer(() => {
     // inputRef.current.focus();
   }, []);
 
-  const createGroup = async () => {
-    setIsLoading(true);
-    const data = await createGroupApi(name);
+  useEffect(() => {
+    setName(groupName);
+  }, [groupName]);
+
+  const updateGroupName = async () => {
+    const data = await updateGroupNameApi({
+      groupId,
+      groupName,
+    });
+    console.log(data);
     if (data.isSuccess) {
       setSuccess(data.message);
-      closeModal();
+      openModal(modals.success_message);
     } else {
       setError(data.message);
     }
+    console.log(data);
+    setIsLoading(false);
+  };
+  const deleteGroup = async () => {
+    const data = await deleteGroupApi(groupId);
+    console.log(data);
+    if (data.isSuccess) {
+      setSuccess(data.message);
+    } else {
+      setError(data.message);
+    }
+    console.log(data);
     setIsLoading(false);
   };
 
@@ -41,15 +60,14 @@ const AddModal = observer(() => {
     <div
       className={`absolute h-screen top-0 left-0 
      right-0 bottom-0 bg-black shadow-md  
-     flex justify-center items-center z-10 bg-opacity-70 ${"visible"}`}
-      //    modalName === modals.add_group ? "visible" : "invisible"
+     flex justify-center items-center z-10 bg-opacity-70 ${
+       modalName === modals.edit_group ? "visible" : "invisible"
+     }`}
     >
       <div className="relative bg-white flex flex-col items-center justify-between w-[80vh] h-[80vh] border-2 border-[#e2e2e2]">
         <div className="w-full flex justify-between items-center px-4 py-3 bg-[#F2F2F2] mx-10">
-          <div className="font-bold text-xl ">Add Group</div>
-          <CloseButton onClick={closeModal} disabled={isLoading}>
-            Close
-          </CloseButton>
+          <div className="font-bold text-xl ">Edit Group</div>
+          <CloseButton onClick={closeModal}>Close</CloseButton>
         </div>
         <div className="flex flex-col  gap-3  w-full px-10">
           <div className="text-lg font-bold">Group Name:</div>
@@ -62,9 +80,12 @@ const AddModal = observer(() => {
           />
           <Alerts />
         </div>
-        <div className="w-full flex justify-center items-center py-4 bg-[#F2F2F2] ">
-          <ApproveButton onClick={createGroup} disabled={isLoading}>
-            Create Group
+        <div className="w-full flex justify-center items-center gap-5 py-4 bg-[#F2F2F2] ">
+          <ApproveButton onClick={updateGroupName} isLoading={isLoading}>
+            Update Group
+          </ApproveButton>
+          <ApproveButton onClick={deleteGroup} isLoading={isLoading}>
+            Delete Group
           </ApproveButton>
         </div>
       </div>
@@ -72,4 +93,4 @@ const AddModal = observer(() => {
   );
 });
 
-export default AddModal;
+export default EditGroupModal;
