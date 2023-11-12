@@ -4,8 +4,9 @@ import { auth } from "../firebase";
 import { signupApi } from "api";
 import { messageStore } from "mobx/messageStore";
 import Alerts from "components/Alerts";
+import { observer } from "mobx-react-lite";
 
-export default function signup() {
+const signup = observer(({}) => {
   const router = useRouter();
   const inputRef = useRef(null);
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ export default function signup() {
     inputRef.current.focus();
   }, []);
 
-  const signup = async () => {
+  const signupFunc = async () => {
     setIsLoading(true);
     const data = await signupApi({
       email,
@@ -86,7 +87,7 @@ export default function signup() {
               className="mb-4 border-2 border-[#4B6DCF] text-semibold rounded-md h-9 pl-2  w-full focus:border-[#4B6DCF]"
             />
             <button
-              onClick={signup}
+              onClick={signupFunc}
               disabled={isLoading}
               className={`${
                 isLoading ? "bg-gray" : "bg-[#4B6DCF]"
@@ -111,4 +112,5 @@ export default function signup() {
       </div>
     </div>
   );
-}
+});
+export default signup;

@@ -11,6 +11,7 @@ import ApproveButton from "ui/button/modal/approve";
 import CloseButton from "ui/button/modal/close";
 import Input from "ui/input";
 import { modals } from "@/util";
+import { GroupsStore } from "mobx/groupsStore";
 
 const AddGroupModal = observer(() => {
   const [name, setName] = useState("");
@@ -27,7 +28,7 @@ const AddGroupModal = observer(() => {
 
   const createGroup = async () => {
     setIsLoading(true);
-    const data = await createGroupApi(name);
+    const data = await GroupsStore.createGroup(name);
     if (data.isSuccess) {
       setSuccess(data.message);
       openModal(modals.success_message);
@@ -62,7 +63,7 @@ const AddGroupModal = observer(() => {
           <Alerts />
         </div>
         <div className="w-full flex justify-center items-center py-4 bg-[#F2F2F2] ">
-          <ApproveButton onClick={createGroup} isLoading={isLoading}>
+          <ApproveButton onClick={createGroup} isLoading={false}>
             Create Group
           </ApproveButton>
         </div>

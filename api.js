@@ -255,6 +255,7 @@ export const addExpenseToGroupApi = async ({
 };
 
 export const updateGroupNameApi = async ({ groupId, groupName }) => {
+  console.log("updateGroupNameApi");
   try {
     const uid = auth.currentUser.uid;
 
@@ -282,6 +283,7 @@ export const updateGroupNameApi = async ({ groupId, groupName }) => {
   }
 };
 export const getMyGroupsApi = async () => {
+  console.log("getMyGroupsApi");
   try {
     const uid = auth.currentUser.uid;
 
@@ -295,10 +297,13 @@ export const getMyGroupsApi = async () => {
       user.groups_ids.map(async (groupId) => {
         const groupRef = doc(db, "groups", groupId);
         const docSnap = await getDoc(groupRef);
-        return await docSnap.data();
+
+        const group = await docSnap.data();
+        return { ...group, id: groupId };
       })
     );
     console.log(groups);
+
     return getResponse("groups fetch successfully ", groups).SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;

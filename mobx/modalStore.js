@@ -1,21 +1,18 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable } from "mobx";
 
 class Modal {
-  modalName = ""
+  modalName = "";
 
   constructor() {
-    makeAutoObservable(this)
-    this.closeModal = this.closeModal.bind(this)
-    this.openModal = this.openModal.bind(this)
-
+    makeAutoObservable(this);
   }
 
   closeModal = () => {
-    this.modalName = ""
-  }
+    this.modalName = "";
+  };
   openModal = (name) => {
-    this.modalName = name
-  }
+    this.modalName = name;
+  };
 }
 
-export const modalStore = new Modal()
+export const modalStore = new Modal();

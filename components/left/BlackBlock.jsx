@@ -1,8 +1,5 @@
 import * as React from "react";
-import Nav from "./Nav";
-import { BiBell } from "react-icons/bi";
-import Title from "./Titlle";
-import PieChart from "./PieChart";
+
 import Image from "next/image";
 
 export default function BlackBlock() {

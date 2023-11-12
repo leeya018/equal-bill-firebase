@@ -6,8 +6,9 @@ import { signinApi } from "api";
 import { messageStore } from "mobx/messageStore";
 import Alerts from "components/Alerts";
 import Image from "next/image";
+import { observer } from "mobx-react-lite";
 
-export default function signin() {
+const signin = observer(({}) => {
   const router = useRouter();
   const inputRef = useRef(null);
   const [email, setEmail] = useState("");
@@ -144,11 +145,5 @@ export default function signin() {
       </div>
     </div>
   );
-}
-// {/* left */}
-// <div className="h-full border-r-2 border-gray w-[50%] flex justify-center">
-//   <div className="text-4xl font-bold ">Google Account</div>
-//   <button onClick={googleSignin}>Sign in</button>
-// </div>
-// {/* right */}
-// <div className="h-full border-gray w-[50%]">1</div>
+});
+export default signin;

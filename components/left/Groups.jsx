@@ -6,28 +6,31 @@ import * as React from "react";
 
 import { BiBell } from "react-icons/bi";
 import { modals } from "util";
+import { observer } from "mobx-react-lite";
 
-export default function Groups() {
-  const { getMyGroups, myGroups } = GroupsStore;
+const Groups = observer(({}) => {
+  const { getMyGroups, myGroups, setChosenGroup } = GroupsStore;
 
   return (
     <div
       className="mx-6 py-5 flex justify-start gap-4 items-center
   "
     >
-      <EditGroupModal groupName={"trstrs"} groupId={"yQ25DtzvCMHf9EKpd9qd"} />
+      <EditGroupModal />
       <AddGroupModal />
       <AddGroup />
       <>
-        {myGroups.map((group, key) => (
+        {myGroups?.map((group, key) => (
           <Group key={key} className="bg-[#FFFBEF]" group={group} />
         ))}
       </>
     </div>
   );
-}
+});
 
-function AddGroup({}) {
+export default Groups;
+
+const AddGroup = observer(({}) => {
   return (
     <div
       className={`p-7 flex flex-col items-center justify-center border-2 border-gray
@@ -42,12 +45,18 @@ function AddGroup({}) {
       <div className="">Add Group</div>
     </div>
   );
-}
-function Group({ className, group }) {
+});
+
+const Group = observer(({ group, className }) => {
+  const onClickGroup = () => {
+    GroupsStore.setChosenGroup(group);
+    modalStore.openModal(modals.edit_group);
+  };
   return (
     <div
       className={`p-3 flex flex-col border-2 border-gray
       rounded-xl gap-1 cursor-pointer ${className}`}
+      onClick={onClickGroup}
     >
       <BiBell
         size={20}
@@ -58,4 +67,4 @@ function Group({ className, group }) {
       <div className="text-gray text-sm">Category</div>
     </div>
   );
-}
+});

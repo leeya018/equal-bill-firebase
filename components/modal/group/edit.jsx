@@ -11,13 +11,16 @@ import ApproveButton from "ui/button/modal/approve";
 import CloseButton from "ui/button/modal/close";
 import Input from "ui/input";
 import { modals } from "@/util";
+import { GroupsStore } from "mobx/groupsStore";
+import { toJS } from "mobx";
 
-const EditGroupModal = observer(({ groupName, groupId }) => {
+const EditGroupModal = observer(() => {
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { setSuccess, setError } = messageStore;
 
   const { modalName, closeModal, openModal } = modalStore;
+  const { getMyGroups, chosenGroup, setChosenGroup } = GroupsStore;
 
   const inputRef = useRef();
 
@@ -26,13 +29,14 @@ const EditGroupModal = observer(({ groupName, groupId }) => {
   }, []);
 
   useEffect(() => {
-    setName(groupName);
-  }, [groupName]);
+    setName(chosenGroup?.name);
+  }, [chosenGroup?.name]);
 
   const updateGroupName = async () => {
-    const data = await updateGroupNameApi({
-      groupId,
-      groupName,
+    console.log("chosenGroup", toJS(chosenGroup));
+    const data = await GroupsStore.updateGroupName({
+      groupId: chosenGroup.id,
+      groupName: name,
     });
     console.log(data);
     if (data.isSuccess) {
@@ -45,10 +49,13 @@ const EditGroupModal = observer(({ groupName, groupId }) => {
     setIsLoading(false);
   };
   const deleteGroup = async () => {
-    const data = await deleteGroupApi(groupId);
+    const data = await deleteGroupApi(chosenGroup.id);
     console.log(data);
     if (data.isSuccess) {
       setSuccess(data.message);
+      openModal(modals.success_message);
+
+      setChosenGroup(null);
     } else {
       setError(data.message);
     }
