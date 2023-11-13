@@ -13,20 +13,23 @@ const Groups = observer(({}) => {
   const { getMyGroups, myGroups, setChosenGroup } = GroupsStore;
 
   return (
-    <div
-      className="mx-6 py-5 flex justify-start gap-4 items-center
-  "
-    >
-      <EditGroupModal />
-      <AddGroupModal />
-      <AddGroup />
-      <>
-        {myGroups
-          ?.map((group, key) => (
-            <Group key={key} className="bg-[#FFFBEF]" group={group} />
-          ))
-          .reverse()}
-      </>
+    <div className="mx-6 py-5 flex flex-col">
+      <div className="  mb-2  underline font-semibold">Groups</div>
+      <div
+        className="flex justify-start items-center gap-4 
+      "
+      >
+        <EditGroupModal />
+        <AddGroupModal />
+        <AddGroup />
+        <>
+          {myGroups
+            ?.map((group, key) => (
+              <Group key={key} className="bg-[#FFFBEF]" group={group} />
+            ))
+            .reverse()}
+        </>
+      </div>
     </div>
   );
 });

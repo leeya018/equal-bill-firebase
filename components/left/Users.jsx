@@ -10,55 +10,50 @@ import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
 import { GroupsStore } from "mobx/groupsStore";
 import { useState } from "react";
+import EditUserModal from "components/modal/user/edit";
+import RemoveUserModal from "components/modal/user/remove";
 
-const Users = observer(({}) => {
-  const [chosenUser, setChosenUser] = useState(null);
-
+const Users = observer(({ canBeEdit = false }) => {
   return (
-    <div
-      className="mx-6 py-5 flex justify-start gap-4 items-center
-  "
-    >
-      {/* <EditGroupModal />
-      <AddGroupModal /> */}
-
-      <>
-        {GroupsStore.users
-          ?.map((user, key) => (
-            <User
-              key={key}
-              className="bg-[#FFFBEF]"
-              user={user}
-              setChosenUser={setChosenUser}
-              chosenUser={chosenUser}
-            />
-          ))
-          .reverse()}
-      </>
+    <div className="mx-6 py-5 flex flex-col">
+      <EditUserModal />
+      <RemoveUserModal />
+      <div className="  mb-2  underline font-semibold">Users</div>
+      <div
+        className="flex justify-start items-center gap-4 
+    "
+      >
+        <>
+          {GroupsStore.users
+            ?.map((user, key) => (
+              <User
+                key={key}
+                className="bg-[#FFFBEF]"
+                user={user}
+                canBeEdit={canBeEdit}
+              />
+            ))
+            .reverse()}
+        </>
+      </div>
     </div>
   );
 });
 
 export default Users;
 
-const User = observer(({ user, className, setChosenUser, chosenUser }) => {
-  const onClickGroup = (e) => {
-    e.stopPropagation();
-    console.log("onClickeUtes", toJS(user));
-
-    // ModalStore.openModal(modals.edit_user);
-  };
+const User = observer(({ user, className, canBeEdit = false }) => {
   return (
     <div
       className={`px-3 py-3 flex flex-col border-2 border-gray w-32 h-28  
       rounded-3xl gap-1 cursor-pointer ${className} ${
-        GroupsStore.chosenGroup?.id === user.id && "border-[#7987B4]"
+        GroupsStore?.chosenGroup?.id === user.id && "border-[#7987B4]"
       }`}
       onClick={() => {
-        if (chosenUser?.id === user.id) {
-          setChosenUser(null);
+        if (GroupsStore.chosenUser?.id === user.id) {
+          GroupsStore.setChosenUser(null);
         } else {
-          setChosenUser(user);
+          GroupsStore.setChosenUser(user);
         }
       }}
     >
@@ -68,12 +63,19 @@ const User = observer(({ user, className, setChosenUser, chosenUser }) => {
           color="black"
           className="border-2 rounded-full bg-white mb-2"
         />
-        <BiEditAlt
-          onClick={onClickGroup}
-          size={20}
-          color="black"
-          className=" bg-white mb-2"
-        />
+        {canBeEdit && (
+          <BiEditAlt
+            onClick={(e) => {
+              e.stopPropagation();
+              GroupsStore.setChosenUser(user);
+
+              ModalStore.openModal(modals.edit_user);
+            }}
+            size={20}
+            color="black"
+            className=" bg-white mb-2"
+          />
+        )}
       </div>
       <div className="text-lg font-semibold">
         {user.name.length > 10 ? user.name.slice(0, 10) + "..." : user.name}

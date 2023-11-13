@@ -13,70 +13,50 @@ import Input from "ui/input";
 import { modals } from "@/util";
 import { GroupsStore } from "mobx/groupsStore";
 import { toJS } from "mobx";
-import Users from "components/left/Users";
 
-const EditGroupModal = observer(() => {
-  const [name, setName] = useState("");
+const RemoveUserModal = observer(() => {
   const [isLoading, setIsLoading] = useState(false);
   const { setSuccess, setError } = MessageStore;
 
   const { modalName, closeModal, openModal } = ModalStore;
-  const { getMyGroups, chosenGroup, setChosenGroup } = GroupsStore;
 
   const inputRef = useRef();
-
-  useEffect(() => {
-    // inputRef.current.focus();
-  }, []);
-
-  useEffect(() => {
-    setName(chosenGroup?.name);
-  }, [chosenGroup?.name]);
+  const groupId = GroupsStore.chosenGroup?.id;
+  const userId = GroupsStore.chosenUser?.id;
 
   return (
     <div
       className={`absolute h-screen top-0 left-0 
      right-0 bottom-0 bg-black shadow-md  
      flex justify-center items-center z-10 bg-opacity-70 ${
-       modalName === modals.edit_group ? "visible" : "invisible"
+       modalName === modals.remove_user ? "visible" : "invisible"
      }`}
     >
-      <div className="relative bg-white flex flex-col items-center justify-between w-[80vh] h-[80vh] border-2 border-[#e2e2e2]">
+      <div className="relative bg-white flex flex-col items-center  w-[80vh] h-[80vh] border-2 border-[#e2e2e2]">
         <div className="w-full flex justify-between items-center px-4 py-3 bg-[#F2F2F2] mx-10">
-          <div className="font-bold text-xl ">Edit Group</div>
+          <div className="font-bold text-xl ">Remove User</div>
           <CloseButton onClick={closeModal}>Close</CloseButton>
         </div>
-        <div className="flex flex-col  gap-3  w-full px-10">
-          <div className="text-lg font-bold">Group Name:</div>
-          <Input
-            inputRef={inputRef}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            type="text"
-            placeholder="Search"
-          />
-          <Users canBeEdit={true} />
-          <Alerts />
+
+        <div className="flex flex-col gap-4 mt-10 text-lg font-bold">
+          Are you sure that you want to delete : {GroupsStore?.chosenUser?.name}
         </div>
-        <div className="w-full flex justify-center items-center gap-5 py-4 bg-[#F2F2F2] ">
+
+        <div className="absolute bottom-0 w-full flex justify-center items-center gap-5 py-4 bg-[#F2F2F2] ">
           <ApproveButton
             onClick={() => {
-              console.log("ApproveButton onClick", toJS(chosenGroup));
-
-              GroupsStore.updateGroupName({
-                groupId: chosenGroup.id,
-                groupName: name,
-              });
+              GroupsStore.removeUserToGroup({ groupId, userId });
+              ModalStore.openModal(modals.edit_group);
             }}
             isLoading={isLoading}
           >
-            Update Group
+            Remove User
           </ApproveButton>
           <ApproveButton
-            onClick={() => GroupsStore.removeGroup(chosenGroup.id)}
+            onClick={() => ModalStore.openModal(modals.edit_group)}
             isLoading={isLoading}
           >
-            Delete Group
+            Cancel
           </ApproveButton>
         </div>
       </div>
@@ -84,4 +64,5 @@ const EditGroupModal = observer(() => {
   );
 });
 
-export default EditGroupModal;
+export default RemoveUserModal;
+//

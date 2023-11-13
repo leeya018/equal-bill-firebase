@@ -216,7 +216,7 @@ export const addUserToGroupApi = async ({ groupId, userId }) => {
 
     return getResponse(
       "User " + userId + "added successfully to Group " + groupId
-    ).PERMISSION;
+    ).SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;
   }
@@ -327,10 +327,60 @@ export const getUsersOfGroupApi = async (groupId) => {
     const querySnapshot = await getDocs(q);
     let users = [];
     querySnapshot.forEach((doc) => {
-      users.push(doc.data());
+      const user = {
+        ...doc.data(),
+        id: doc.id,
+      };
+      users.push(user);
     });
     console.log(users);
     return getResponse("groups fetch successfully ", users).SUCCESS;
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR;
+  }
+};
+
+export const removeUserToGroupApi = async ({ groupId, userId }) => {
+  const uid = auth.currentUser.uid;
+
+  try {
+    const groupRef = doc(db, "groups", groupId); // Replace 'groups' with your actual collection name
+    const docSnap = await getDoc(groupRef);
+
+    if (!docSnap.exists()) {
+      return getResponse("Group " + groupId + " does not exist").NOT_FOUND;
+    }
+
+    const group = docSnap.data();
+
+    if (group.admin_id !== uid) {
+      return getResponse("You don't have permission to add to this group")
+        .PERMISSION;
+    }
+
+    await setDoc(
+      groupRef,
+      {
+        ...group,
+        users_ids: arrayRemove(userId),
+      },
+      { merge: true }
+    );
+    const userRef = doc(db, "users", userId); // Replace 'groups' with your actual collection name
+    const docUserSnap = await getDoc(userRef);
+
+    if (!docUserSnap.exists()) {
+      return getResponse("User " + userId + " does not exist").NOT_FOUND;
+    }
+    const user = docUserSnap.data();
+
+    await updateDoc(userRef, {
+      groups_ids: arrayRemove(groupId),
+    });
+
+    return getResponse(
+      "User " + userId + "removed successfully from Group " + groupId
+    ).SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;
   }

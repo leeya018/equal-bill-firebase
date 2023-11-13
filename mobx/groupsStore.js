@@ -4,6 +4,7 @@ import {
   deleteGroupApi,
   getMyGroupsApi,
   getUsersOfGroupApi,
+  removeUserToGroupApi,
   updateGroupNameApi,
 } from "api";
 import { auth } from "../firebase";
@@ -17,6 +18,7 @@ class Groups {
   myGroups = [];
   users = [];
   chosenGroup = null;
+  chosenUser = null;
   messageStore = null;
   modalStore = null;
   asyncStore = null;
@@ -30,6 +32,10 @@ class Groups {
 
   setChosenGroup = (group) => {
     this.chosenGroup = group;
+  };
+  setChosenUser = (user) => {
+    console.log("chosenUser", toJS(user));
+    this.chosenUser = user;
   };
 
   getMyGroups = async () => {
@@ -132,6 +138,27 @@ class Groups {
     const data = await getUsersOfGroupApi(groupId);
     if (data.isSuccess) {
       this.users = [...data.data];
+    } else {
+      this.messageStore.setError(data.message);
+    }
+    this.asyncStore.setIsLoading(false);
+  };
+
+  removeUserToGroup = async ({ groupId, userId }) => {
+    this.asyncStore.setIsLoading(true);
+    const data = await removeUserToGroupApi({ groupId, userId });
+    if (data.isSuccess) {
+      const new_users_ids = this.chosenGroup.users_ids.filter(
+        (id) => id !== userId
+      );
+      this.users = this.users.filter((user) => user.id !== userId);
+      this.chosenGroup.users_ids = new_users_ids;
+      this.myGroups = this.myGroups.map((group) => {
+        if (group.id == this.chosenGroup.id) {
+          return { ...group, users_ids: new_users_ids };
+        }
+        return group;
+      });
     } else {
       this.messageStore.setError(data.message);
     }
