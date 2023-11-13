@@ -59,16 +59,9 @@ const EditUserModal = observer(() => {
           </div>
           <div className="font-semibold text-lg underline">Expenses:</div>
           <ul className=" h-[22rem] overflow-y-auto">
-            {getUserExpenses()
-              .concat(getUserExpenses())
-
-              .concat(getUserExpenses())
-
-              .concat(getUserExpenses())
-              .concat(getUserExpenses())
-              .map((expense, key) => (
-                <Expense key={key} expense={expense} />
-              ))}
+            {getUserExpenses().map((expense, key) => (
+              <Expense key={key} expense={expense} />
+            ))}
           </ul>
         </div>
         <div className="absolute bottom-0 w-full flex justify-center items-center gap-5 py-4 bg-[#F2F2F2] ">
