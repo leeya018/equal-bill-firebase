@@ -14,7 +14,12 @@ const Expenses = observer(({ expenses }) => {
   return (
     <div className="p-3 border-gray border-2 rounded-xl  w-full">
       <div className="flex justify-between px-2 items-center">
-        <div className="font-semibold text-xl">Expenses</div>
+        <div className="font-semibold text-xl">
+          {GroupsStore.chosenGroup
+            ? GroupsStore.chosenGroup?.name + " "
+            : "All Expenses"}
+          Expenses
+        </div>
         <AddExpenseModal />
         {GroupsStore.chosenGroup && (
           <BiAddToQueue

@@ -48,7 +48,7 @@ export default function index() {
   const addUserToGroup = async () => {
     const data = await addUserToGroupApi({
       userId: "32AX9v4gJLNSeLGd6nGdTrvMaEe2",
-      groupId: "5Jf5gsVQCdneOHA1hmGG",
+      groupId: "eoJwqLC0zYvunLJF11zF",
     });
     console.log(data);
   };

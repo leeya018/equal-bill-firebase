@@ -25,7 +25,7 @@ const Right = observer(({}) => {
         {/* expenses */}
         <Expenses expenses={expenses} />
         {/* current results */}
-        <ChartResults />
+        {GroupsStore.chosenGroup && <ChartResults />}
       </div>
     </div>
   );
