@@ -18,7 +18,7 @@ const signup = observer(({}) => {
 
   const { setSuccess, setError } = MessageStore;
   useEffect(() => {
-    inputRef.current.focus();
+    // inputRef.current.focus();
   }, []);
 
   const signupFunc = async () => {
@@ -108,7 +108,9 @@ const signup = observer(({}) => {
             </div>
           </div>
         </div>
-        <div className="bg-equal_bill h-full w-[60%] rounded-xl shadow-lg flex items-center justify-center"></div>
+        <div className="bg-equal_bill h-full w-[60%] rounded-xl shadow-lg flex items-center justify-center">
+          <div className="text-white font-bold rotate-45">Equal bill1</div>
+        </div>
       </div>
     </div>
   );

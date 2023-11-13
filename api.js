@@ -11,6 +11,7 @@ import {
   where,
   deleteDoc,
   addDoc,
+  documentId,
   arrayRemove,
 } from "firebase/firestore";
 import { auth, db } from "./firebase";
@@ -308,6 +309,27 @@ export const getMyGroupsApi = async () => {
     return getResponse("groups fetch successfully ", groups).SUCCESS;
   } catch (error) {
     console.log(error.message);
+    return getResponse(error.message).GENERAL_ERROR;
+  }
+};
+
+export const getUsersOfGroupApi = async (groupId) => {
+  try {
+    console.log("getUsersOfGroupApi");
+    const docRef = doc(db, "groups", groupId);
+    const docSnap = await getDoc(docRef);
+    const group = docSnap.data();
+
+    const usersRef = collection(db, "users");
+
+    const q = query(usersRef, where(documentId(), "in", group.users_ids));
+
+    getDocs(q).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, " => ", doc.data());
+      });
+    });
+  } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;
   }
 };

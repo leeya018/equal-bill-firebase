@@ -6,27 +6,28 @@ import {
   findGroupByIdApi,
   getAllUsers,
   getUserByIdApi,
-  loginApi,
   createGroupApi,
   signupApi,
   updateGroupNameApi,
+  signinApi,
+  getUsersOfGroupApi,
 } from "api";
 import React, { useEffect } from "react";
 
 export default function index() {
   const signUp = async () => {
     const data = await signupApi({
-      name: "adi",
-      email: "ida2@gmail.com",
+      name: "adi3",
+      email: "ida13@gmail.com",
       password: "password2121",
-      phone: "0542223113",
+      phone: "0542223413",
     });
     console.log(data);
   };
 
   const login = async () => {
-    const data = await loginApi({
-      email: "ida2@gmail.com",
+    const data = await signinApi({
+      email: "ida13@gmail.com",
       password: "password2121",
     });
     console.log(data);
@@ -46,8 +47,8 @@ export default function index() {
   };
   const addUserToGroup = async () => {
     const data = await addUserToGroupApi({
-      userId: "T2m8IM0gpLU4ulAkWNHVZWlH1No1",
-      groupId: "njn6PZEE1BOpK66qUgaJ",
+      userId: "32AX9v4gJLNSeLGd6nGdTrvMaEe2",
+      groupId: "5Jf5gsVQCdneOHA1hmGG",
     });
     console.log(data);
   };
@@ -68,6 +69,10 @@ export default function index() {
       groupId: "njn6PZEE1BOpK66qUgaJ",
       groupName: "sex group",
     });
+    console.log(data);
+  };
+  const getUsersOfGroup = async () => {
+    const data = await getUsersOfGroupApi("5Jf5gsVQCdneOHA1hmGG");
     console.log(data);
   };
   return (
@@ -130,6 +135,12 @@ export default function index() {
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           updateGroupNameApi
+        </button>
+        <button
+          onClick={getUsersOfGroup}
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
+        >
+          getUsersOfGroupApi
         </button>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../firebase";
 import { signinApi } from "api";
-import { MessageStore } from "mobx/messageStore";
+import { MessageStore } from "mobx/MessageStore";
 import Alerts from "components/Alerts";
 import Image from "next/image";
 import { observer } from "mobx-react-lite";

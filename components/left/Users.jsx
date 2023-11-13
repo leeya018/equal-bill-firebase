@@ -1,6 +1,6 @@
 import AddGroupModal from "components/modal/group/add";
 import EditGroupModal from "components/modal/group/edit";
-import { GroupsStore } from "mobx/groupsStore";
+import { UsersStore } from "mobx/UsersStore";
 import { ModalStore } from "mobx/modalStore";
 import * as React from "react";
 
@@ -8,10 +8,9 @@ import { BiBell, BiEditAlt } from "react-icons/bi";
 import { modals } from "util";
 import { observer } from "mobx-react-lite";
 import { toJS } from "mobx";
+import { GroupsStore } from "mobx/groupsStore";
 
-const Groups = observer(({}) => {
-  const { getMyGroups, myGroups, setChosenGroup } = GroupsStore;
-
+const Users = observer(({}) => {
   return (
     <div
       className="mx-6 py-5 flex justify-start gap-4 items-center
@@ -21,7 +20,7 @@ const Groups = observer(({}) => {
       <AddGroupModal />
       <AddGroup />
       <>
-        {myGroups
+        {GroupsStore.chosenGroup.users
           ?.map((group, key) => (
             <Group key={key} className="bg-[#FFFBEF]" group={group} />
           ))
@@ -31,7 +30,7 @@ const Groups = observer(({}) => {
   );
 });
 
-export default Groups;
+export default Users;
 
 const AddGroup = observer(({}) => {
   return (
@@ -54,20 +53,20 @@ const Group = observer(({ group, className }) => {
   const onClickGroup = (e) => {
     e.stopPropagation();
     console.log("onClickGroup", toJS(group));
-    GroupsStore.setChosenGroup(group);
+    UsersStore.setChosenGroup(group);
     ModalStore.openModal(modals.edit_group);
   };
   return (
     <div
       className={`px-3 py-3 flex flex-col border-2 border-gray w-32 h-28  
       rounded-3xl gap-1 cursor-pointer ${className} ${
-        GroupsStore.chosenGroup?.id === group.id && "border-[#7987B4]"
+        UsersStore.chosenGroup?.id === group.id && "border-[#7987B4]"
       }`}
       onClick={() => {
-        if (GroupsStore.chosenGroup?.id === group.id) {
-          GroupsStore.setChosenGroup(null);
+        if (UsersStore.chosenGroup?.id === group.id) {
+          UsersStore.setChosenGroup(null);
         } else {
-          GroupsStore.setChosenGroup(group);
+          UsersStore.setChosenGroup(group);
         }
       }}
     >
