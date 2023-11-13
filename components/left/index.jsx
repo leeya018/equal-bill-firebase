@@ -8,6 +8,8 @@ import BlackBlock from "./BlackBlock";
 import Groups from "./Groups";
 import VerticalChart from "./VerticalChart";
 import GroupGraphResult from "./GroupGraphResult";
+import Users from "./Users";
+import { GroupsStore } from "mobx/groupsStore";
 
 export default function Left() {
   return (
@@ -22,6 +24,9 @@ export default function Left() {
         <BlackBlock />
         {/* groups items */}
         <Groups />
+        {/* users items */}
+
+        <Users />
         {/* Grapth */}
         <GroupGraphResult />
       </div>

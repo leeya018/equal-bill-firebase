@@ -3,6 +3,7 @@ import {
   createGroupApi,
   deleteGroupApi,
   getMyGroupsApi,
+  getUsersOfGroupApi,
   updateGroupNameApi,
 } from "api";
 import { auth } from "../firebase";
@@ -14,6 +15,7 @@ import { AsyncStore } from "./asyncStore";
 
 class Groups {
   myGroups = [];
+  users = [];
   chosenGroup = null;
   messageStore = null;
   modalStore = null;
@@ -119,6 +121,17 @@ class Groups {
         }
         return group;
       });
+    } else {
+      this.messageStore.setError(data.message);
+    }
+    this.asyncStore.setIsLoading(false);
+  };
+
+  getUsersOfGroup = async (groupId) => {
+    this.asyncStore.setIsLoading(true);
+    const data = await getUsersOfGroupApi(groupId);
+    if (data.isSuccess) {
+      this.users = [...data.data];
     } else {
       this.messageStore.setError(data.message);
     }

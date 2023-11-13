@@ -324,11 +324,13 @@ export const getUsersOfGroupApi = async (groupId) => {
 
     const q = query(usersRef, where(documentId(), "in", group.users_ids));
 
-    getDocs(q).then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-      });
+    const querySnapshot = await getDocs(q);
+    let users = [];
+    querySnapshot.forEach((doc) => {
+      users.push(doc.data());
     });
+    console.log(users);
+    return getResponse("groups fetch successfully ", users).SUCCESS;
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR;
   }

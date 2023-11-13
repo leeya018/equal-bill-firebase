@@ -55,6 +55,7 @@ const Group = observer(({ group, className }) => {
     e.stopPropagation();
     console.log("onClickGroup", toJS(group));
     GroupsStore.setChosenGroup(group);
+
     ModalStore.openModal(modals.edit_group);
   };
   return (
@@ -68,6 +69,8 @@ const Group = observer(({ group, className }) => {
           GroupsStore.setChosenGroup(null);
         } else {
           GroupsStore.setChosenGroup(group);
+          console.log(toJS(group));
+          GroupsStore.getUsersOfGroup(group.id);
         }
       }}
     >
