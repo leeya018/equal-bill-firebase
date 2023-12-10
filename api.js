@@ -248,12 +248,16 @@ export const addExpenseToGroupApi = async ({
     const docSnap = await getDoc(groupRef)
 
     if (!docSnap.exists()) {
-      return getResponse("Group " + groupId + " does not exist").NOT_FOUND
+      return getResponse("Group " + groupId + " is already exists").BAD_REQUEST
     }
 
     const group = docSnap.data()
 
+    const newExpenseRef = doc(collection(db, "expenses"))
+    const newId = newExpenseRef.id
+
     const newExpense = {
+      id: newId,
       user_id: uid,
       amount: expenseAmount,
       name: expenseName,

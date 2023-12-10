@@ -98,9 +98,9 @@ export default function index() {
   // }
   const addExpenseToGroup = async () => {
     const data = await addExpenseToGroupApi({
-      groupId: "6SZL8Q0l4DzkOOtRbn3R",
-      expenseName: "Arnona3",
-      expenseAmount: 22,
+      groupId: "SozJdKenUxZrMNRAYuQm",
+      expenseName: "Arnona5",
+      expenseAmount: 21,
     })
     console.log(data)
   }
