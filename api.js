@@ -53,7 +53,7 @@ export const signupApi = async (user) => {
 
     const uid = userCredential.user.uid
 
-    const newUser = { email, name, phone, groups_ids: [] }
+    const newUser = { id: uid, email, name, phone, groups_ids: [] }
 
     await addUser(newUser, uid)
 

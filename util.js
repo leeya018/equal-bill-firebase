@@ -26,8 +26,8 @@ export const getResponse = (message, data = "") => {
       message,
       isSuccess: false,
     },
-  };
-};
+  }
+}
 
 export const modals = {
   add_group: "add_group",
@@ -35,6 +35,5 @@ export const modals = {
   add_expense: "add_expense",
   edit_user: "edit_user",
   remove_user: "remove_user",
-
   success_message: "success_message",
-};
+}

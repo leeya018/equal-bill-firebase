@@ -17,8 +17,8 @@ import React, { useEffect, useState } from "react"
 export default function index() {
   const signUp = async () => {
     const data = await signupApi({
-      name: "adi30",
-      email: "ida30@gmail.com",
+      name: "adi31",
+      email: "ida31@gmail.com",
       password: "password2121",
       phone: "0542223413",
     })
@@ -33,7 +33,7 @@ export default function index() {
 
   const login = async () => {
     const data = await signinApi({
-      email: "ida30@gmail.com",
+      email: "ida31@gmail.com",
       password: "password2121",
     })
     console.log(data)
@@ -98,8 +98,8 @@ export default function index() {
   // }
   const addExpenseToGroup = async () => {
     const data = await addExpenseToGroupApi({
-      groupId: "SozJdKenUxZrMNRAYuQm",
-      expenseName: "Arnona5",
+      groupId: "4sTlawgdH3f73blVR4bp",
+      expenseName: "Arnona6",
       expenseAmount: 21,
     })
     console.log(data)
@@ -131,7 +131,7 @@ export default function index() {
   // }
   const updateGroupName = async () => {
     const data = await updateGroupNameApi({
-      groupId: "6SZL8Q0l4DzkOOtRbn3R",
+      groupId: "4sTlawgdH3f73blVR4bp",
       groupName: " group111",
     })
     console.log(data)
