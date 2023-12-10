@@ -12,7 +12,7 @@ import {
   signinApi,
   getUsersOfGroupApi,
 } from "api"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 export default function index() {
   const signUp = async () => {
@@ -54,8 +54,8 @@ export default function index() {
   //     "email": "ida30@gmail.com",
   //     "groups_ids": []
   // }
-  const createGroup = async () => {
-    const data = await createGroupApi("group bset 122s")
+  const createGroup = async (file) => {
+    const data = await createGroupApi("group bset 122s", file)
     console.log(data)
   }
   //   {
@@ -63,13 +63,14 @@ export default function index() {
   //     "message": "group created",
   //     "isSuccess": true,
   //     "data": {
-  //         "admin_id": "108pUlpr2SPl7KqiCizMsJoW30A2",
+  //         "admin_id": "wepe3hcnrSZN96tN02BQOvSRmIz1",
   //         "expenses": [],
-  //         "name": "group bset 122s",
   //         "users_ids": [
-  //             "108pUlpr2SPl7KqiCizMsJoW30A2"
+  //             "wepe3hcnrSZN96tN02BQOvSRmIz1"
   //         ],
-  //         "id": "ztFnif1hkUSUcISQIKuX"
+  //         "name": "group bset 122s",
+  //         "imageUrl": "users/wepe3hcnrSZN96tN02BQOvSRmIz1/group/uEa9sWVIhHEvk4BIQMGH/me.png",
+  //         "id": "uEa9sWVIhHEvk4BIQMGH"
   //     }
   // }
   const deleteGroup = async () => {
@@ -177,6 +178,7 @@ export default function index() {
       className="w-full  h-[100vh] flex flex-col  justify-center items-center gap-10
     "
     >
+      input
       <div className="font-bold text-xl">equal-bill-firebase</div>
       <div>
         <button
@@ -197,12 +199,16 @@ export default function index() {
         >
           getUserById
         </button>
-        <button
+        <div>
+          <div>create group</div>
+          <AddFileInput createGroup={createGroup} />
+        </div>
+        {/* <button
           onClick={createGroup}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
           createGroup
-        </button>
+        </button> */}
         <button
           onClick={deleteGroup}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
@@ -240,6 +246,32 @@ export default function index() {
           getUsersOfGroupApi
         </button>
       </div>
+    </div>
+  )
+}
+
+const AddFileInput = ({ createGroup }) => {
+  const [selectedFile, setSelectedFile] = useState(null)
+
+  const onFileChange = (event) => {
+    setSelectedFile(event.target.files[0])
+  }
+
+  return (
+    <div>
+      <div>
+        <input type="file" onChange={onFileChange} />
+        <button
+          className={`${
+            selectedFile ? "bg-blue" : "bg-gray_dark"
+          } border-2 border-black rounded-xl  text=white px-6 py-4`}
+          onClick={() => createGroup(selectedFile)}
+          disabled={!selectedFile}
+        >
+          create Group:
+        </button>
+      </div>
+      <p>{selectedFile?.name}</p>
     </div>
   )
 }

@@ -14,13 +14,20 @@ import {
   documentId,
   arrayRemove,
 } from "firebase/firestore"
-import { auth, db } from "./firebase"
+import { auth, db, storage } from "./firebase"
 import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth"
 import { getResponse } from "./util"
+import {
+  getBlob,
+  getDownloadURL,
+  getMetadata,
+  ref,
+  uploadBytes,
+} from "firebase/storage"
 
 const addUser = async (user, id) => {
   const userRef = doc(db, "users", id)
@@ -100,7 +107,7 @@ export const findGroupByIdApi = async (groupId) => {
     return getResponse(error.message).GENERAL_ERROR
   }
 }
-export const createGroupApi = async (groupName) => {
+export const createGroupApi = async (groupName, file) => {
   try {
     const uid = auth.currentUser.uid
     const groupRef = collection(db, "groups") // Replace 'groups' with your actual collection name
@@ -112,15 +119,19 @@ export const createGroupApi = async (groupName) => {
 
     const docSnap = await getDocs(q)
     if (!docSnap.empty) {
-      return getResponse("Group " + groupName + " does not exist").NOT_FOUND
+      return getResponse("Group " + groupName + " is already exists")
+        .BAD_REQUEST
     }
-
     const groupDocRef = await addDoc(groupRef, {
       admin_id: uid,
       name: groupName,
       expenses: [],
       users_ids: [uid],
     })
+    const imageUrl = `users/${uid}/group/${groupDocRef.id}/${file.name}`
+    const groupId = groupDocRef.id
+    await addImageApi(file, imageUrl, groupId)
+
     const addedGroup = await getDoc(groupDocRef)
     const userRef = doc(db, "users", uid) // Replace 'groups' with your actual collection name
 
@@ -387,6 +398,23 @@ export const removeUserToGroupApi = async ({ groupId, userId }) => {
       "User " + userId + "removed successfully from Group " + groupId
     ).SUCCESS
   } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR
+  }
+}
+
+export const addImageApi = async (file, imageUrl, groupId) => {
+  try {
+    const storageRef = ref(storage, imageUrl)
+
+    const snapshot = await uploadBytes(storageRef, file)
+    const downloadURL = await getDownloadURL(storageRef)
+
+    console.log(`File available at: ${downloadURL}`, db)
+    const groupRef = doc(db, "groups", groupId)
+    await setDoc(groupRef, { imageUrl }, { merge: true })
+    return imageUrl
+  } catch (error) {
+    console.log(error.message)
     return getResponse(error.message).GENERAL_ERROR
   }
 }
