@@ -122,25 +122,28 @@ export const createGroupApi = async (groupName, file) => {
       return getResponse("Group " + groupName + " is already exists")
         .BAD_REQUEST
     }
-    const groupDocRef = await addDoc(groupRef, {
+    const newDocRef = doc(collection(db, "groups"))
+    const newGid = newDocRef.id
+    const imageUrl = await addImageApi(file, uid, newGid)
+
+    await setDoc(newDocRef, {
       admin_id: uid,
       name: groupName,
       expenses: [],
       users_ids: [uid],
+      id: newGid,
+      imageUrl,
     })
-    const imageUrl = `users/${uid}/group/${groupDocRef.id}/${file.name}`
-    const groupId = groupDocRef.id
-    await addImageApi(file, imageUrl, groupId)
 
-    const addedGroup = await getDoc(groupDocRef)
+    const addedGroup = await getDoc(newDocRef)
     const userRef = doc(db, "users", uid) // Replace 'groups' with your actual collection name
 
     await updateDoc(userRef, {
-      groups_ids: arrayUnion(groupDocRef.id),
+      groups_ids: arrayUnion(newDocRef.id),
     })
     return getResponse("group created", {
       ...addedGroup.data(),
-      id: groupDocRef.id,
+      id: newDocRef.id,
     }).SUCCESS
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR
@@ -402,16 +405,15 @@ export const removeUserToGroupApi = async ({ groupId, userId }) => {
   }
 }
 
-export const addImageApi = async (file, imageUrl, groupId) => {
+export const addImageApi = async (file, uid, groupId) => {
   try {
+    const imageUrl = `users/${uid}/groups/${groupId}/${file.name}`
+
     const storageRef = ref(storage, imageUrl)
 
     const snapshot = await uploadBytes(storageRef, file)
     const downloadURL = await getDownloadURL(storageRef)
 
-    console.log(`File available at: ${downloadURL}`, db)
-    const groupRef = doc(db, "groups", groupId)
-    await setDoc(groupRef, { imageUrl }, { merge: true })
     return imageUrl
   } catch (error) {
     console.log(error.message)

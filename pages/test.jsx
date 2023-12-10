@@ -55,7 +55,7 @@ export default function index() {
   //     "groups_ids": []
   // }
   const createGroup = async (file) => {
-    const data = await createGroupApi("group bset 122s", file)
+    const data = await createGroupApi("group bset 199", file)
     console.log(data)
   }
   //   {
