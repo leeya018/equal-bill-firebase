@@ -11,70 +11,167 @@ import {
   updateGroupNameApi,
   signinApi,
   getUsersOfGroupApi,
-} from "api";
-import React, { useEffect } from "react";
+} from "api"
+import React, { useEffect } from "react"
 
 export default function index() {
   const signUp = async () => {
     const data = await signupApi({
-      name: "adi3",
-      email: "ida13@gmail.com",
+      name: "adi30",
+      email: "ida30@gmail.com",
       password: "password2121",
       phone: "0542223413",
-    });
-    console.log(data);
-  };
+    })
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "signup success",
+  //     "isSuccess": true,
+  //     "data": ""
+  // }
 
   const login = async () => {
     const data = await signinApi({
-      email: "ida13@gmail.com",
+      email: "ida30@gmail.com",
       password: "password2121",
-    });
-    console.log(data);
-  };
+    })
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "user logged in successfully",
+  //     "isSuccess": true,
+  //     "data": ""
+  // }
   const getUserById = async () => {
-    const data = await getUserByIdApi("JFFdzbd6F7UDa0L57eMxHETZBW82");
-    console.log(data);
-  };
-
+    const data = await getUserByIdApi("108pUlpr2SPl7KqiCizMsJoW30A2")
+    console.log(data)
+  }
+  //   {
+  //     "phone": "0542223413",
+  //     "name": "adi30",
+  //     "email": "ida30@gmail.com",
+  //     "groups_ids": []
+  // }
   const createGroup = async () => {
-    const data = await createGroupApi("group bset 122s");
-    console.log(data);
-  };
+    const data = await createGroupApi("group bset 122s")
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "group created",
+  //     "isSuccess": true,
+  //     "data": {
+  //         "admin_id": "108pUlpr2SPl7KqiCizMsJoW30A2",
+  //         "expenses": [],
+  //         "name": "group bset 122s",
+  //         "users_ids": [
+  //             "108pUlpr2SPl7KqiCizMsJoW30A2"
+  //         ],
+  //         "id": "ztFnif1hkUSUcISQIKuX"
+  //     }
+  // }
   const deleteGroup = async () => {
-    const data = await deleteGroupApi("njn6PZEE1BOpK66qUgaJ");
-    console.log(data);
-  };
+    const data = await deleteGroupApi("ztFnif1hkUSUcISQIKuX")
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "Document with ID ${groupId} successfully deleted!",
+  //     "isSuccess": true,
+  //     "data": ""
+  // }
   const addUserToGroup = async () => {
     const data = await addUserToGroupApi({
       userId: "32AX9v4gJLNSeLGd6nGdTrvMaEe2",
-      groupId: "eoJwqLC0zYvunLJF11zF",
-    });
-    console.log(data);
-  };
+      groupId: "6SZL8Q0l4DzkOOtRbn3R",
+    })
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "User 32AX9v4gJLNSeLGd6nGdTrvMaEe2added successfully to Group 6SZL8Q0l4DzkOOtRbn3R",
+  //     "isSuccess": true,
+  //     "data": ""
+  // }
   const addExpenseToGroup = async () => {
     const data = await addExpenseToGroupApi({
-      groupId: "njn6PZEE1BOpK66qUgaJ",
+      groupId: "6SZL8Q0l4DzkOOtRbn3R",
       expenseName: "Arnona3",
-      expenseAmount: 21,
-    });
-    console.log(data);
-  };
+      expenseAmount: 22,
+    })
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "Expense added successfully to Group 6SZL8Q0l4DzkOOtRbn3R",
+  //     "isSuccess": true,
+  //     "data": ""
+  // }
   const findGroupById = async () => {
-    const data = await findGroupByIdApi("njn6PZEE1BOpK66qUgaJ");
-    console.log(data);
-  };
+    const data = await findGroupByIdApi("6SZL8Q0l4DzkOOtRbn3R")
+    console.log(data)
+  }
+  //   {
+  //     "admin_id": "108pUlpr2SPl7KqiCizMsJoW30A2",
+  //     "users_ids": [
+  //         "108pUlpr2SPl7KqiCizMsJoW30A2",
+  //         "32AX9v4gJLNSeLGd6nGdTrvMaEe2"
+  //     ],
+  //     "name": "group bset 122s",
+  //     "expenses": [
+  //         {
+  //             "user_id": "108pUlpr2SPl7KqiCizMsJoW30A2",
+  //             "name": "Arnona3",
+  //             "amount": 22
+  //         }
+  //     ]
+  // }
   const updateGroupName = async () => {
     const data = await updateGroupNameApi({
-      groupId: "njn6PZEE1BOpK66qUgaJ",
-      groupName: "sex group",
-    });
-    console.log(data);
-  };
+      groupId: "6SZL8Q0l4DzkOOtRbn3R",
+      groupName: " group111",
+    })
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "group name has been updated",
+  //     "isSuccess": true,
+  //     "data": ""
+  // }
   const getUsersOfGroup = async () => {
-    const data = await getUsersOfGroupApi("5Jf5gsVQCdneOHA1hmGG");
-    console.log(data);
-  };
+    const data = await getUsersOfGroupApi("6SZL8Q0l4DzkOOtRbn3R")
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "groups fetch successfully ",
+  //     "isSuccess": true,
+  //     "data": [
+  //         {
+  //             "groups_ids": [
+  //                 "6SZL8Q0l4DzkOOtRbn3R"
+  //             ],
+  //             "email": "ida30@gmail.com",
+  //             "phone": "0542223413",
+  //             "name": "adi30",
+  //             "id": "108pUlpr2SPl7KqiCizMsJoW30A2"
+  //         },
+  //         {
+  //             "phone": "0542223413",
+  //             "email": "ida13@gmail.com",
+  //             "groups_ids": [
+  //                 "5Jf5gsVQCdneOHA1hmGG",
+  //                 "eoJwqLC0zYvunLJF11zF",
+  //                 "6SZL8Q0l4DzkOOtRbn3R"
+  //             ],
+  //             "name": "adi3",
+  //             "id": "32AX9v4gJLNSeLGd6nGdTrvMaEe2"
+  //         }
+  //     ]
+  // }
   return (
     <div
       className="w-full  h-[100vh] flex flex-col  justify-center items-center gap-10
@@ -144,5 +241,5 @@ export default function index() {
         </button>
       </div>
     </div>
-  );
+  )
 }
