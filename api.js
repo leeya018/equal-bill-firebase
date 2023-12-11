@@ -15,10 +15,13 @@ import {
   arrayRemove,
 } from "firebase/firestore"
 import { auth, db, storage } from "./firebase"
+
 import {
   createUserWithEmailAndPassword,
   getAuth,
   signInWithEmailAndPassword,
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
 } from "firebase/auth"
 import { getResponse } from "./util"
 import {
@@ -39,6 +42,33 @@ const addUser = async (user, id) => {
     },
     { merge: true }
   )
+}
+export const updateUserApi = async ({ userName, file }) => {
+  try {
+    const uid = auth.currentUser.uid
+
+    const userDocRef = doc(db, "users", uid)
+    if (!userDocRef) throw new Error("user not found")
+
+    let imageUrl
+    let newUserData = { name: userName }
+    if (file) {
+      imageUrl = await addImageApi(file, uid)
+      newUserData.imageUrl = imageUrl
+    }
+
+    await setDoc(
+      userDocRef,
+      {
+        ...newUserData,
+      },
+      { merge: true }
+    )
+
+    return getResponse("user updated", { imageUrl }).SUCCESS
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR
+  }
 }
 
 export const signupApi = async (user) => {
@@ -76,6 +106,54 @@ export const signinApi = async ({ email, password }) => {
     return getResponse(error.message).GENERAL_ERROR
   }
 }
+function sendVerificationCode(phoneNumber) {
+  const appVerifier = window.recaptchaVerifier
+  console.log(auth)
+  signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+    .then((confirmationResult) => {
+      // SMS sent. Prompt user to enter the code
+      console.log({ confirmationResult })
+      window.confirmationResult = confirmationResult
+    })
+    .catch((error) => {
+      // Error; SMS not sent
+      console.error(error)
+    })
+}
+
+function verifyCode(verificationCode) {
+  const confirmationResult = window.confirmationResult
+  confirmationResult
+    .confirm(verificationCode)
+    .then((result) => {
+      // User signed in successfully.
+      const user = result.user
+      // ...
+    })
+    .catch((error) => {
+      // User couldn't sign in (bad verification code?)
+      console.error(error)
+    })
+}
+
+export const signinPhoneApi = async (phoneNum) => {
+  const appVerifier = window.recaptchaVerifier
+
+  const auth = getAuth()
+  signInWithPhoneNumber(auth, phoneNum, appVerifier)
+    .then((confirmationResult) => {
+      // SMS sent. Prompt user to type the code from the message, then sign the
+      // user in with confirmationResult.confirm(code).
+      window.confirmationResult = confirmationResult
+      // ...
+      console.log(getResponse("user is login phone").SUCCESS)
+    })
+    .catch((error) => {
+      // Error; SMS not sent
+      // ...
+      console.log(getResponse(error.message).GENERAL_ERROR)
+    })
+}
 
 export const getUserByIdApi = async (userId) => {
   try {
@@ -107,7 +185,7 @@ export const findGroupByIdApi = async (groupId) => {
     return getResponse(error.message).GENERAL_ERROR
   }
 }
-export const createGroupApi = async (groupName, file) => {
+export const createGroupApi = async ({ groupName, file }) => {
   try {
     const uid = auth.currentUser.uid
     const groupRef = collection(db, "groups") // Replace 'groups' with your actual collection name
@@ -124,16 +202,22 @@ export const createGroupApi = async (groupName, file) => {
     }
     const newDocRef = doc(collection(db, "groups"))
     const newGid = newDocRef.id
-    const imageUrl = await addImageApi(file, uid, newGid)
 
-    await setDoc(newDocRef, {
+    let imageUrl
+    let newGroup = {
       admin_id: uid,
       name: groupName,
       expenses: [],
       users_ids: [uid],
       id: newGid,
-      imageUrl,
-    })
+    }
+
+    if (file) {
+      imageUrl = await addImageApi(file, uid, newGid)
+      newGroup.imageUrl = imageUrl
+    }
+
+    await setDoc(newDocRef, newGroup)
 
     const addedGroup = await getDoc(newDocRef)
     const userRef = doc(db, "users", uid) // Replace 'groups' with your actual collection name
@@ -279,13 +363,13 @@ export const addExpenseToGroupApi = async ({
   }
 }
 
-export const updateGroupNameApi = async ({ groupId, groupName }) => {
+export const updateGroupNameApi = async ({ groupId, groupName, file }) => {
   console.log("updateGroupNameApi")
   try {
     const uid = auth.currentUser.uid
 
-    const groupRef = doc(db, "groups", groupId) // Replace 'groups' with your actual collection name
-    const docSnap = await getDoc(groupRef)
+    const groupDocRef = doc(db, "groups", groupId) // Replace 'groups' with your actual collection name
+    const docSnap = await getDoc(groupDocRef)
 
     if (!docSnap.exists()) {
       return getResponse("Group " + groupName + " does not exist").NOT_FOUND
@@ -296,13 +380,20 @@ export const updateGroupNameApi = async ({ groupId, groupName }) => {
       return getResponse("You don't have permission to delete this group")
         .PERMISSION
     }
+    let imageUrl
 
-    await updateDoc(groupRef, {
-      ...group,
+    let groupToEdit = {
       name: groupName,
-    })
+    }
 
-    return getResponse("group name has been updated").SUCCESS
+    if (file) {
+      imageUrl = await addImageApi(file, uid, groupId)
+      groupToEdit.imageUrl = imageUrl
+    }
+
+    await setDoc(groupDocRef, groupToEdit, { merge: true })
+
+    return getResponse("group name has been updated", { imageUrl }).SUCCESS
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR
   }
@@ -409,16 +500,21 @@ export const removeUserToGroupApi = async ({ groupId, userId }) => {
   }
 }
 
-export const addImageApi = async (file, uid, groupId) => {
+export const addImageApi = async (file, uid, groupId = "") => {
   try {
-    const imageUrl = `users/${uid}/groups/${groupId}/${file.name}`
+    let imageUrl = ""
+    if (!groupId) {
+      imageUrl = `users/${uid}/profile.png`
+    } else {
+      imageUrl = `users/${uid}/groups/${groupId}/groupImage.png`
+    }
 
     const storageRef = ref(storage, imageUrl)
 
     const snapshot = await uploadBytes(storageRef, file)
     const downloadURL = await getDownloadURL(storageRef)
 
-    return imageUrl
+    return downloadURL
   } catch (error) {
     console.log(error.message)
     return getResponse(error.message).GENERAL_ERROR

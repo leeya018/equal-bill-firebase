@@ -11,10 +11,18 @@ import {
   updateGroupNameApi,
   signinApi,
   getUsersOfGroupApi,
+  signinPhoneApi,
+  updateUserApi,
 } from "api"
+import Image from "next/image"
 import React, { useEffect, useState } from "react"
 
 export default function index() {
+  const [imageFromReq, setimageFromReq] = useState("")
+  const signinPhone = async () => {
+    const data = await signinPhoneApi("0542226958")
+    console.log(data)
+  }
   const signUp = async () => {
     const data = await signupApi({
       name: "adi31",
@@ -45,32 +53,56 @@ export default function index() {
   //     "data": ""
   // }
   const getUserById = async () => {
-    const data = await getUserByIdApi("108pUlpr2SPl7KqiCizMsJoW30A2")
+    const data = await getUserByIdApi("O6U2dzYMocXW47AYPHPNz5kRiVP2")
     console.log(data)
   }
   //   {
+  //     "name": "adi31",
+  //     "id": "O6U2dzYMocXW47AYPHPNz5kRiVP2",
   //     "phone": "0542223413",
-  //     "name": "adi30",
-  //     "email": "ida30@gmail.com",
+  //     "email": "ida31@gmail.com",
   //     "groups_ids": []
   // }
-  const createGroup = async (file) => {
-    const data = await createGroupApi("group bset 199", file)
+  const updateUser = async (file) => {
+    const data = await updateUserApi({ userName: "new 22 ", file })
     console.log(data)
+    setimageFromReq(data.data.imageUrl)
+  }
+  const createGroup = async (file) => {
+    const data = await createGroupApi({ groupName: "group 132 new ", file })
+    console.log(data)
+    setimageFromReq(data.data.imageUrl)
   }
   //   {
   //     "status": 200,
   //     "message": "group created",
   //     "isSuccess": true,
   //     "data": {
-  //         "admin_id": "wepe3hcnrSZN96tN02BQOvSRmIz1",
-  //         "expenses": [],
   //         "users_ids": [
-  //             "wepe3hcnrSZN96tN02BQOvSRmIz1"
+  //             "O6U2dzYMocXW47AYPHPNz5kRiVP2"
   //         ],
-  //         "name": "group bset 122s",
-  //         "imageUrl": "users/wepe3hcnrSZN96tN02BQOvSRmIz1/group/uEa9sWVIhHEvk4BIQMGH/me.png",
-  //         "id": "uEa9sWVIhHEvk4BIQMGH"
+  //         "imageUrl": "https://firebasestorage.googleapis.com/v0/b/equal-bill.appspot.com/o/users%2FO6U2dzYMocXW47AYPHPNz5kRiVP2%2Fgroups%2FpBTcuSjxTIu6kipuCMwv%2FgroupImage.png?alt=media&token=ef33599b-e80f-4f2d-a117-925f0280ae5c",
+  //         "name": "group 132 new ",
+  //         "expenses": [],
+  //         "id": "pBTcuSjxTIu6kipuCMwv",
+  //         "admin_id": "O6U2dzYMocXW47AYPHPNz5kRiVP2"
+  //     }
+  // }
+  const updateGroupName = async (file) => {
+    const data = await updateGroupNameApi({
+      groupId: "9smmJFrNaRxu1Ec8iqPa",
+      groupName: " group111",
+      file,
+    })
+    console.log(data)
+    setimageFromReq(data.data.imageUrl)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "group name has been updated",
+  //     "isSuccess": true,
+  //     "data": {
+  //         "imageUrl": "https://firebasestorage.googleapis.com/v0/b/equal-bill.appspot.com/o/users%2FO6U2dzYMocXW47AYPHPNz5kRiVP2%2Fgroups%2F9smmJFrNaRxu1Ec8iqPa%2FgroupImage.png?alt=media&token=d3e493fe-2676-469d-b755-22fed12d39f1"
   //     }
   // }
   const deleteGroup = async () => {
@@ -129,19 +161,6 @@ export default function index() {
   //         }
   //     ]
   // }
-  const updateGroupName = async () => {
-    const data = await updateGroupNameApi({
-      groupId: "4sTlawgdH3f73blVR4bp",
-      groupName: " group111",
-    })
-    console.log(data)
-  }
-  //   {
-  //     "status": 200,
-  //     "message": "group name has been updated",
-  //     "isSuccess": true,
-  //     "data": ""
-  // }
   const getUsersOfGroup = async () => {
     const data = await getUsersOfGroupApi("6SZL8Q0l4DzkOOtRbn3R")
     console.log(data)
@@ -180,7 +199,20 @@ export default function index() {
     >
       input
       <div className="font-bold text-xl">equal-bill-firebase</div>
+      <Image
+        alt="image data form firebase"
+        width={100}
+        height={100}
+        className=""
+        src={imageFromReq}
+      />
       <div>
+        <button
+          onClick={signinPhone}
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
+        >
+          phone signin
+        </button>
         <button
           onClick={signUp}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
@@ -200,9 +232,23 @@ export default function index() {
           getUserById
         </button>
         <div>
-          <div>create group</div>
-          <AddFileInput createGroup={createGroup} />
+          <div>updateGroupName</div>
+          <AddFileInput txt={"updateGroupName"} callback={updateGroupName} />
         </div>
+        <div>
+          <div>create group</div>
+          <AddFileInput txt={"create group"} callback={createGroup} />
+        </div>
+        <div>
+          <div>update user</div>
+          <AddFileInput txt={"update user"} callback={updateUser} />
+        </div>
+        {/* <button
+          onClick={updateGroupName}
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
+        >
+          updateGroupNameApi
+        </button> */}
         {/* <button
           onClick={createGroup}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
@@ -233,12 +279,7 @@ export default function index() {
         >
           findGroupById
         </button>
-        <button
-          onClick={updateGroupName}
-          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
-        >
-          updateGroupNameApi
-        </button>
+
         <button
           onClick={getUsersOfGroup}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
@@ -250,7 +291,7 @@ export default function index() {
   )
 }
 
-const AddFileInput = ({ createGroup }) => {
+const AddFileInput = ({ callback, txt }) => {
   const [selectedFile, setSelectedFile] = useState(null)
 
   const onFileChange = (event) => {
@@ -265,10 +306,10 @@ const AddFileInput = ({ createGroup }) => {
           className={`${
             selectedFile ? "bg-blue" : "bg-gray_dark"
           } border-2 border-black rounded-xl  text=white px-6 py-4`}
-          onClick={() => createGroup(selectedFile)}
+          onClick={() => callback(selectedFile)}
           disabled={!selectedFile}
         >
-          create Group:
+          {txt}:
         </button>
       </div>
       <p>{selectedFile?.name}</p>
