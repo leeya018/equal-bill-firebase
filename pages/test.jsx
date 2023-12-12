@@ -13,16 +13,65 @@ import {
   getUsersOfGroupApi,
   signinPhoneApi,
   updateUserApi,
+  verifyCodeApi,
 } from "api"
 import Image from "next/image"
 import React, { useEffect, useState } from "react"
 
 export default function index() {
   const [imageFromReq, setimageFromReq] = useState("")
+  const [vercode, setVercode] = useState("")
+
   const signinPhone = async () => {
-    const data = await signinPhoneApi("0542226958")
+    const data = await signinPhoneApi("+972 54 222 6958")
     console.log(data)
   }
+  //   {
+  //     "status": 200,
+  //     "message": "signin with code success success",
+  //     "isSuccess": true,
+  //     "data": {
+  //         "confirmationResult": {
+  //             "verificationId": "AD8T5IuTK_M1Qvdh0RTOugK4FfwQpI_vCky5irI5rT5R97lsCyNuiRARhtfJ_NB_VdYuOIIMBcGJzDn0pgvxnF87jXbP-6ZQgtrB48S1Xdm-jtjaZ5l4c9nRuiOl3NU7VPIsnklPXTPYPnzXWaBjWYJhumZjkwvqYw"
+  //         }
+  //     }
+  // }
+  const verifyCode = async (code) => {
+    const data = await verifyCodeApi(code)
+    console.log(data)
+  }
+  //   {
+  //     "status": 200,
+  //     "message": "verfication code success",
+  //     "isSuccess": true,
+  //     "data": {
+  //         "user": {
+  //             "uid": "cLT7sK13h0Qx2RztFAdqJ9Nnj4g2",
+  //             "emailVerified": false,
+  //             "isAnonymous": false,
+  //             "phoneNumber": "+972542226958",
+  //             "providerData": [
+  //                 {
+  //                     "providerId": "phone",
+  //                     "uid": "+972542226958",
+  //                     "displayName": null,
+  //                     "email": null,
+  //                     "phoneNumber": "+972542226958",
+  //                     "photoURL": null
+  //                 }
+  //             ],
+  //             "stsTokenManager": {
+  //                 "refreshToken": "AMf-vBzmNCozWEOrCRYtZ9WAWK8b_xMn0AtRjkdvmblkbCPxLbnzrS2qluWrKXkcRV9h4gAXQvms96n_mgzABE1v6rxfRC39YpWh1lTcaw1-DTmSvM_GqLUPcK8zK94bfAyJ8lzy6HakFFfm1Nc5us4EvBLwI-uVK8y2BddPN4RVpmJtu1y_jFa-89mBYXRgpVbBrHSd-30v",
+  //                 "accessToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImJlNzgyM2VmMDFiZDRkMmI5NjI3NDE2NThkMjA4MDdlZmVlNmRlNWMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vZXF1YWwtYmlsbCIsImF1ZCI6ImVxdWFsLWJpbGwiLCJhdXRoX3RpbWUiOjE3MDIzNzkyNjUsInVzZXJfaWQiOiJjTFQ3c0sxM2gwUXgyUnp0RkFkcUo5Tm5qNGcyIiwic3ViIjoiY0xUN3NLMTNoMFF4MlJ6dEZBZHFKOU5uajRnMiIsImlhdCI6MTcwMjM3OTI2NSwiZXhwIjoxNzAyMzgyODY1LCJwaG9uZV9udW1iZXIiOiIrOTcyNTQyMjI2OTU4IiwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJwaG9uZSI6WyIrOTcyNTQyMjI2OTU4Il19LCJzaWduX2luX3Byb3ZpZGVyIjoicGhvbmUifX0.H-KTe4TbNabBZSloVC0Z_JurfU7j3gRu8A7-PjN-luTkey0-tORwmj1N3F5t3gTHeO_oU_uMmW0NLrXzEdmJmizx1QUO8l04dnSq75gOYCwigNEyhR6Y03id_ThAxfDLhuVqXO4SXvOibNI8ClOfU2ANyANUY48bNw0aytH41BT86r3klUfU-WeTPUHiFXae24VVtZJxZ4mqwU3Y8Lc1qtwEkHx5gILmkIPYUgdKcso86l6Pk40RZaLo6J09NX2fdTeeSvHV45epWVCTj0tXgsrbX9MTSmlyYAnGGwcdjG72h2x80s_4MO-F9MFz9XIatdzDE-q1wRri_ftmAwUtww",
+  //                 "expirationTime": 1702382865826
+  //             },
+  //             "createdAt": "1702311489303",
+  //             "lastLoginAt": "1702379265544",
+  //             "apiKey": "AIzaSyBOiLsqnT4LRVxsis8uK_Te9bddcrMnRwA",
+  //             "appName": "[DEFAULT]"
+  //         }
+  //     }
+  // }
   const signUp = async () => {
     const data = await signupApi({
       name: "adi31",
@@ -206,13 +255,32 @@ export default function index() {
         className=""
         src={imageFromReq}
       />
+      <div className="border-2 w-44 h-44" id="recaptcha-container"></div>
       <div>
-        <button
-          onClick={signinPhone}
-          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
-        >
-          phone signin
-        </button>
+        <div className="flex justify-center items-center flex-col">
+          <button
+            onClick={signinPhone}
+            className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
+          >
+            phone signin
+          </button>
+          <input
+            type="text"
+            placeholder="verificatino code "
+            value={vercode}
+            onChange={(e) => setVercode(e.target.value)}
+          />
+          <button
+            className={`${
+              vercode ? "bg-blue" : "bg-gray_dark"
+            } border-2 border-black rounded-xl  text=white px-6 py-4`}
+            disabled={!vercode}
+            onClick={() => verifyCode(vercode)}
+          >
+            send code
+          </button>
+        </div>
+
         <button
           onClick={signUp}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
@@ -306,8 +374,8 @@ const AddFileInput = ({ callback, txt }) => {
           className={`${
             selectedFile ? "bg-blue" : "bg-gray_dark"
           } border-2 border-black rounded-xl  text=white px-6 py-4`}
-          onClick={() => callback(selectedFile)}
           disabled={!selectedFile}
+          onClick={() => callback(selectedFile)}
         >
           {txt}:
         </button>

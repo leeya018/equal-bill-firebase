@@ -106,53 +106,44 @@ export const signinApi = async ({ email, password }) => {
     return getResponse(error.message).GENERAL_ERROR
   }
 }
-function sendVerificationCode(phoneNumber) {
-  const appVerifier = window.recaptchaVerifier
-  console.log(auth)
-  signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to enter the code
-      console.log({ confirmationResult })
-      window.confirmationResult = confirmationResult
-    })
-    .catch((error) => {
-      // Error; SMS not sent
-      console.error(error)
-    })
-}
 
-function verifyCode(verificationCode) {
-  const confirmationResult = window.confirmationResult
-  confirmationResult
-    .confirm(verificationCode)
-    .then((result) => {
-      // User signed in successfully.
-      const user = result.user
-      // ...
-    })
-    .catch((error) => {
-      // User couldn't sign in (bad verification code?)
-      console.error(error)
-    })
+export const verifyCodeApi = async (verificationCode) => {
+  try {
+    const confirmationResult = window.confirmationResult
+
+    const result = await confirmationResult.confirm(verificationCode)
+
+    const user = result.user
+    console.log(user)
+    return getResponse("verfication code success", { user }).SUCCESS
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR
+  }
 }
 
 export const signinPhoneApi = async (phoneNum) => {
-  const appVerifier = window.recaptchaVerifier
-
-  const auth = getAuth()
-  signInWithPhoneNumber(auth, phoneNum, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      window.confirmationResult = confirmationResult
-      // ...
-      console.log(getResponse("user is login phone").SUCCESS)
-    })
-    .catch((error) => {
-      // Error; SMS not sent
-      // ...
-      console.log(getResponse(error.message).GENERAL_ERROR)
-    })
+  try {
+    console.log(phoneNum, auth)
+    auth.useDeviceLanguage()
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      "recaptcha-container",
+      {},
+      auth
+    )
+    const appVerifier = window.recaptchaVerifier
+    const confirmationResult = await signInWithPhoneNumber(
+      auth,
+      phoneNum,
+      appVerifier
+    )
+    console.log(confirmationResult)
+    window.confirmationResult = confirmationResult
+    return getResponse("signin with code success success", {
+      confirmationResult,
+    }).SUCCESS
+  } catch (error) {
+    return getResponse(error.message).GENERAL_ERROR
+  }
 }
 
 export const getUserByIdApi = async (userId) => {
