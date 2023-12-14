@@ -1,3 +1,4 @@
+import { createDeepLink } from "@/util"
 import {
   addExpenseToGroupApi,
   addGroupApi,
@@ -10,7 +11,7 @@ import {
   signupApi,
   updateGroupNameApi,
   signinApi,
-  getUsersOfGroupApi,
+  getGroupUsersApi,
   signinPhoneApi,
   updateUserApi,
   verifyCodeApi,
@@ -23,7 +24,8 @@ export default function index() {
   const [vercode, setVercode] = useState("")
 
   const signinPhone = async () => {
-    const data = await signinPhoneApi("+972 54 222 6958")
+    // const data = await signinPhoneApi("+972 54 222 6958")
+    const data = await signinPhoneApi("+972 53 620 0540")
     console.log(data)
   }
   //   {
@@ -117,6 +119,14 @@ export default function index() {
     console.log(data)
     setimageFromReq(data.data.imageUrl)
   }
+  //   {
+  //     "status": 200,
+  //     "message": "user updated",
+  //     "isSuccess": true,
+  //     "data": {
+  //         "imageUrl": "https://firebasestorage.googleapis.com/v0/b/equal-bill.appspot.com/o/users%2Fp5xVvQaKcqcW3IqLMc9G4YvMYNx1%2Fprofile.png?alt=media&token=c7339e67-0c19-4fe3-b444-5df8a255dd23"
+  //     }
+  // }
   const createGroup = async (file) => {
     const data = await createGroupApi({ groupName: "group 132 new ", file })
     console.log(data)
@@ -139,12 +149,12 @@ export default function index() {
   // }
   const updateGroupName = async (file) => {
     const data = await updateGroupNameApi({
-      groupId: "9smmJFrNaRxu1Ec8iqPa",
+      groupId: "yV0kBgWA5G71U1hNkApt",
       groupName: " group111",
       file,
     })
     console.log(data)
-    setimageFromReq(data.data.imageUrl)
+    setimageFromReq(data.data?.imageUrl)
   }
   //   {
   //     "status": 200,
@@ -166,8 +176,8 @@ export default function index() {
   // }
   const addUserToGroup = async () => {
     const data = await addUserToGroupApi({
-      userId: "32AX9v4gJLNSeLGd6nGdTrvMaEe2",
-      groupId: "6SZL8Q0l4DzkOOtRbn3R",
+      userId: "AiLcHqmsY1VHl1C5RqaXoV0PVI92",
+      groupId: "yV0kBgWA5G71U1hNkApt",
     })
     console.log(data)
   }
@@ -179,9 +189,9 @@ export default function index() {
   // }
   const addExpenseToGroup = async () => {
     const data = await addExpenseToGroupApi({
-      groupId: "4sTlawgdH3f73blVR4bp",
-      expenseName: "Arnona6",
-      expenseAmount: 21,
+      groupId: "yV0kBgWA5G71U1hNkApt",
+      expenseName: "shokolad",
+      expenseAmount: 7,
     })
     console.log(data)
   }
@@ -211,7 +221,7 @@ export default function index() {
   //     ]
   // }
   const getUsersOfGroup = async () => {
-    const data = await getUsersOfGroupApi("6SZL8Q0l4DzkOOtRbn3R")
+    const data = await getGroupUsersApi("6SZL8Q0l4DzkOOtRbn3R")
     console.log(data)
   }
   //   {
@@ -281,6 +291,12 @@ export default function index() {
           </button>
         </div>
 
+        <button
+          onClick={() => createDeepLink("23889023lk7pl3892")}
+          className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
+        >
+          createLink
+        </button>
         <button
           onClick={signUp}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
@@ -352,7 +368,7 @@ export default function index() {
           onClick={getUsersOfGroup}
           className=" border-2 border-black rounded-xl bg-blue text=white px-6 py-4"
         >
-          getUsersOfGroupApi
+          getGroupUsersApi
         </button>
       </div>
     </div>

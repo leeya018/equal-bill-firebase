@@ -1,23 +1,19 @@
-import React from "react"
+import React from "react";
 
 export default function Input({
   inputRef = null,
-  type = "text",
   value = "",
   onChange = () => {},
   placeholder = "",
-  className = "",
 }) {
-  console.log({ value })
-
   return (
     <input
       ref={inputRef}
       value={value}
       onChange={onChange}
-      type={type}
+      type="text"
       placeholder={placeholder}
-      className={className}
+      className="pl-5 h-10  w-full border-2 border-[#e2e2e2]"
     />
-  )
+  );
 }

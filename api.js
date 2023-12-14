@@ -23,7 +23,7 @@ import {
   signInWithPhoneNumber,
   RecaptchaVerifier,
 } from "firebase/auth"
-import { getResponse } from "./util"
+import { defaultUserImageUrl, getResponse } from "./util"
 import {
   getBlob,
   getDownloadURL,
@@ -115,7 +115,24 @@ export const verifyCodeApi = async (verificationCode) => {
 
     const user = result.user
     console.log(user)
-    return getResponse("verfication code success", { user }).SUCCESS
+
+    const { uid, phoneNumber } = user
+    const name = "USER"
+
+    const newUser = {
+      id: uid,
+      imageUrl: "",
+      name,
+      phone: phoneNumber,
+      groups_ids: [],
+    }
+    const docRef = doc(db, "users", uid)
+    const docSnap = await getDoc(docRef)
+    if (!docSnap.exists()) {
+      await addUser(newUser, uid)
+    }
+
+    return getResponse("verfication code success", { user: newUser }).SUCCESS
   } catch (error) {
     return getResponse(error.message).GENERAL_ERROR
   }
@@ -138,7 +155,7 @@ export const signinPhoneApi = async (phoneNum) => {
     )
     console.log(confirmationResult)
     window.confirmationResult = confirmationResult
-    return getResponse("signin with code success success", {
+    return getResponse("login with code success success", {
       confirmationResult,
     }).SUCCESS
   } catch (error) {
@@ -389,8 +406,9 @@ export const updateGroupNameApi = async ({ groupId, groupName, file }) => {
     return getResponse(error.message).GENERAL_ERROR
   }
 }
-export const getMyGroupsApi = async () => {
-  console.log("getMyGroupsApi")
+// getUserGroupsApi
+export const getUserGroupsApi = async () => {
+  console.log("getUserGroupsApi")
   try {
     const uid = auth.currentUser.uid
 
@@ -417,10 +435,10 @@ export const getMyGroupsApi = async () => {
     return getResponse(error.message).GENERAL_ERROR
   }
 }
-
-export const getUsersOfGroupApi = async (groupId) => {
+// getGroupUsersApi
+export const getGroupUsersApi = async (groupId) => {
   try {
-    console.log("getUsersOfGroupApi")
+    console.log("getGroupUsersApi")
     const docRef = doc(db, "groups", groupId)
     const docSnap = await getDoc(docRef)
     const group = docSnap.data()

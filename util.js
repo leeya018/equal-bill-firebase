@@ -36,4 +36,14 @@ export const modals = {
   edit_user: "edit_user",
   remove_user: "remove_user",
   success_message: "success_message",
+  email_and_pass: "email_and_pass",
+  phone: "phone",
+}
+
+export const defaultUserImageUrl = "user/1/profile.png"
+//
+export const getUrl = () => {
+  return process.env.NODE_ENV === "development"
+    ? process.env.NEXT_PUBLIC_BASIC_URL
+    : process.env.NEXT_PUBLIC_BASIC_URL_PRODUCTION
 }

@@ -1,0 +1,35 @@
+import cors from "cors"
+import nc from "next-connect"
+import * as admin from "firebase-admin"
+// Initialize Firebase Admin SDK as shown previously
+
+const payload = {
+  param1: "value1",
+  param2: "value2",
+}
+const handler = nc({ attachParams: true })
+
+handler.get(async (req, res) => {
+  const originalLink = "https://www.example.com"
+  const linkWithPayload = `${originalLink}?param1=${encodeURIComponent(
+    payload.param1
+  )}&param2=${encodeURIComponent(payload.param2)}`
+
+  const dynamicLink = admin.dynamicLinks().createLink({
+    dynamicLinkInfo: {
+      domainUriPrefix: "https://yourapp.page.link",
+      link: linkWithPayload,
+      // Additional configurations...
+    },
+  })
+
+  dynamicLink
+    .then((link) => {
+      return res.status(200).send(`Created dynamic link with payload: ${link}`)
+    })
+    .catch(() => {
+      return res.status(500).send("Data appended ERROR")
+    })
+})
+
+export default handler

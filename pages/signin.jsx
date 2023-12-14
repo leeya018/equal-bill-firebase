@@ -1,76 +1,80 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { auth } from "../firebase";
-import { signinApi } from "api";
-import { MessageStore } from "mobx/MessageStore";
-import Alerts from "components/Alerts";
-import Image from "next/image";
-import { observer } from "mobx-react-lite";
+import React, { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/router"
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth"
+import { auth } from "../firebase"
+import { signinApi } from "api"
+import { MessageStore } from "mobx/MessageStore"
+import Alerts from "components/Alerts"
+import Image from "next/image"
+import { observer } from "mobx-react-lite"
+import SignButton from "ui/button/modal/sign"
+import SignInput from "ui/input/sign"
 
 const signin = observer(({}) => {
-  const router = useRouter();
-  const inputRef = useRef(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { setSuccess, setError } = MessageStore;
+  const router = useRouter()
+  const inputRef = useRef(null)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const { setSuccess, setError } = MessageStore
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    if (inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [inputRef])
 
   const signin = async () => {
-    setIsLoading(true);
+    setIsLoading(true)
 
     const data = await signinApi({
       email,
       password,
-    });
+    })
     if (data.isSuccess) {
-      setSuccess(data.message);
+      setSuccess(data.message)
 
-      router.push("/");
+      router.push("/")
     } else {
-      setError(data.message);
+      setError(data.message)
     }
-    console.log(data);
-    setIsLoading(false);
-  };
+    console.log(data)
+    setIsLoading(false)
+  }
 
   const googleSignin = () => {
-    const provider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider()
     signInWithPopup(auth, provider)
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const someToken = credential.accessToken;
+        const credential = GoogleAuthProvider.credentialFromResult(result)
+        const someToken = credential.accessToken
         // console.log(token)
 
         // The signed-in user info.
-        const user = result.user;
-        console.log(user);
+        const user = result.user
+        console.log(user)
 
-        console.log(user.photoURL);
-        console.log(user.displayName);
-        console.log(user.uid);
+        console.log(user.photoURL)
+        console.log(user.displayName)
+        console.log(user.uid)
 
         // debtStore.addUser(user.uid, user.displayName)
-        router.push("/");
+        router.push("/")
         // IdP data available using getAdditionalUserInfo(result)
         // ...
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        const errorCode = error.code
+        const errorMessage = error.message
         // The email of the user's account used.
         // const email = error.customData.email
         // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        const credential = GoogleAuthProvider.credentialFromError(error)
         // ...
-      });
-  };
+      })
+  }
 
   return (
     <div
@@ -87,31 +91,25 @@ const signin = observer(({}) => {
           <div className="w-[80%]">
             <div className="text-4xl font-bold mb-2">Sign in</div>
             <div className="mb-10 font-semibold">Enter email and password </div>
-            <input
-              ref={inputRef}
-              type="text"
+            <SignInput
+              // inputRef={inputRef}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter Email"
-              className="mb-2 border-2 border-[#4B6DCF] text-semibold rounded-md h-9 pl-2 w-full focus:border-custom-blue"
             />
 
-            <input
-              type="text"
+            <SignInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Type Password"
-              className="mb-4 border-2 border-[#4B6DCF] text-semibold rounded-md h-9 pl-2  w-full focus:border-[#4B6DCF]"
             />
-            <button
+            <SignButton
               onClick={signin}
               disabled={isLoading}
-              className={`${
-                isLoading ? "bg-gray" : "bg-[#4B6DCF]"
-              } mb-2  border-2  rounded-xl w-full py-2 text-white font-semibold flex justify-center items-center`}
+              className={`${isLoading ? "bg-gray" : "bg-[#4B6DCF]"} mb-2 `}
             >
               Sign in
-            </button>
+            </SignButton>
             <button
               onClick={googleSignin}
               className="bg-[##4284F3]
@@ -144,6 +142,6 @@ const signin = observer(({}) => {
         <div className="bg-equal_bill h-full w-[60%] rounded-xl shadow-lg flex items-center justify-center"></div>
       </div>
     </div>
-  );
-});
-export default signin;
+  )
+})
+export default signin
